@@ -86,6 +86,18 @@ Ce client sert de référence d'intégration locale. Le client médecin de l'éq
 pourra reprendre les mêmes stubs et confirmer ses contrats avant l'intégration
 finale.
 
+Une maquette de suivi est disponible dans `ui_app.py`. Après installation des
+dépendances et démarrage des deux serveurs, lancer :
+
+```powershell
+streamlit run ui_app.py
+```
+
+L’interface montre la santé des deux services, permet de vérifier un médicament,
+de charger le tableau des stocks depuis la pharmacie et de consulter les examens
+par identifiant d’examen ou de patient. Elle est en lecture seule : le contrat
+Pharmacie n’expose pas encore d’opération de mise à jour de stock.
+
 ## 6. Équipe
 
 Projet réalisé en groupe de sept membres dans le cadre du cours de Middleware.

@@ -32,7 +32,7 @@ partie du projet de façon autonome et recentrer les évolutions futures.
 
 ## Maquette UI
 
-Une interface de démonstration indépendante pourra ensuite appeler les deux
-stubs, afficher les stocks et comptes-rendus, simuler des changements de stock
-et montrer l'état de santé des services. Cette maquette reste un chantier
-distinct du backend gRPC actuel.
+La maquette `ui_app.py` appelle les deux stubs, affiche les stocks et les
+comptes-rendus, et indique l'état de santé des services. Elle est actuellement
+en lecture seule : la simulation d'une modification de stock nécessite une
+opération RPC dédiée, à convenir avec l'équipe avant d'étendre le contrat.
