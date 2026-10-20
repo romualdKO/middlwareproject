@@ -135,8 +135,10 @@ La configuration Docker Compose démarre les deux services gRPC, la passerelle
 REST avec l'interface web HTML/Tailwind, ainsi que l'interface Streamlit. Le
 fichier `render.yaml` prépare une démo publique Render avec les deux services
 gRPC confinés dans le même conteneur que la passerelle. Voir
-[docs/deployment.md](docs/deployment.md) pour les étapes Render ou VPS. Les mocks
-ne conviennent pas à des données de patients réelles.
+[docs/deployment.md](docs/deployment.md) pour les étapes Render, Vercel ou VPS.
+Vercel publie le frontend `web_ui/`; il doit appeler un backend REST externe
+configuré dans le champ Adresse de l'API. Les mocks ne conviennent pas à des
+données de patients réelles.
 
 ## 7. Équipe
 

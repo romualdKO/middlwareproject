@@ -39,6 +39,54 @@ les modifications de stock sont en mémoire et sont réinitialisées lors d'un
 redémarrage ou d'une mise en veille. Ce profil convient à une présentation, pas
 à un service médical de production. [Détails des limites gratuites Render](https://render.com/docs/free).
 
+## Publier l'interface sur Vercel
+
+Vercel sert le frontend statique contenu dans `web_ui/`. Les serveurs gRPC et la
+passerelle REST restent sur Render ou un VPS. Les fonctions Vercel ont une durée
+d'exécution limitée; elles ne remplacent pas des serveurs gRPC persistants.
+
+1. Dans Vercel, importer le dépôt GitHub `romualdKO/middlwareproject` et choisir
+   la branche `romuald-pharmacie-radiologie`.
+2. Définir `web_ui` comme **Root Directory**, choisir **Other** comme framework,
+   laisser la commande de build vide et utiliser `.` comme répertoire de sortie.
+   Le fichier `web_ui/vercel.json` règle les en-têtes du site.
+3. Déployer l'interface. Dans le champ **Adresse de l'API**, saisir l'URL HTTPS
+   publique du backend, par exemple `https://nom-du-service.onrender.com`.
+4. Dans l'environnement du backend, définir
+   `CORS_ALLOW_ORIGINS=https://nom-du-projet.vercel.app`, puis redéployer le
+   backend. Si le domaine Vercel change, mettre cette valeur à jour.
+5. Saisir dans l'interface la clé `API_KEY` configurée sur le backend, puis
+   cliquer **Connecter**. Le frontend ne contient pas la clé de manière statique.
+
+Le navigateur envoie les requêtes REST avec `X-API-Key`. L'API doit être publiée
+en HTTPS et autoriser précisément l'origine Vercel via CORS. Le profil Render
+ci-dessus garde les ports gRPC sur la boucle locale du conteneur; les systèmes
+externes appellent alors REST. Pour donner à un système externe un accès gRPC
+direct, utiliser le profil VPS avec TLS/mTLS et des règles pare-feu adaptées.
+
+## Connecter d'autres systèmes
+
+Contrats disponibles : `proto/pharmacie.proto` et `proto/radiologie.proto`.
+Les clients gRPC Python réutilisables sont dans `grpc_services/clients.py` et
+`grpc_services/medecin_client.py`. Ils prennent les cibles dans
+`PHARMACIE_GRPC_TARGET` et `RADIOLOGIE_GRPC_TARGET`, appliquent un délai borné
+et acceptent les certificats TLS configurés par `GRPC_TLS_CA`,
+`GRPC_TLS_CLIENT_CERT` et `GRPC_TLS_CLIENT_KEY`.
+
+Les logiciels compatibles HTTP/JSON peuvent appeler la passerelle REST :
+
+| Opération | Requête |
+| --- | --- |
+| Lister les médicaments | `GET /api/v1/pharmacie/medicaments` |
+| Vérifier un stock | `GET /api/v1/pharmacie/medicaments/{id}/stock?quantite_demandee=2` |
+| Mettre à jour un stock | `PUT /api/v1/pharmacie/medicaments/{id}/stock` avec `{"nouvelle_quantite":25}` |
+| Lire un examen | `GET /api/v1/radiologie/examens/{id}` |
+| Examens d'un patient | `GET /api/v1/radiologie/patients/{id}/examens` |
+
+Ajouter l'en-tête `X-API-Key` si `API_KEY` est configurée. La référence
+interactive se trouve sur `/docs` et le schéma JSON sur `/openapi.json`. Les
+contrôles de service sont `/health/live` et `/health/ready`.
+
 ## Démarrage local ou démonstration sur VPS
 
 1. Installer Docker Engine et le plugin Docker Compose sur le VPS.

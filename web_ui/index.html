@@ -3,154 +3,211 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1324">
-  <title>Clinique Espoir — Portail des services</title>
+  <meta name="theme-color" content="#f5f8fa">
+  <meta name="description" content="Portail de démonstration de la Clinique Espoir : disponibilité des médicaments et suivi des examens radiologiques.">
+  <title>Clinique Espoir — Portail de soins</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { theme: { extend: { colors: { ink: '#0b1324', panel: '#111d32', accent: '#60d6c2' }, boxShadow: { glow: '0 24px 80px rgba(4, 12, 28, .42)' } } } };
+    tailwind.config = { theme: { extend: { colors: { brand: '#087f8c', ink: '#17313a', mist: '#f5f8fa' }, boxShadow: { card: '0 12px 40px rgba(22, 54, 66, .07)' } } } };
   </script>
   <style>
-    body { background: radial-gradient(ellipse at 15% 0%, rgba(49, 113, 133, .17), transparent 38%), #0b1324; }
-    .glass { background: rgba(17, 29, 50, .78); backdrop-filter: blur(18px); }
-    .grid-bg { background-image: linear-gradient(rgba(148,163,184,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,.035) 1px, transparent 1px); background-size: 34px 34px; }
-    input, select { color-scheme: dark; }
+    body { background: #f5f8fa; color: #17313a; }
+    .soft-grid { background-image: radial-gradient(#bdd0d6 0.7px, transparent 0.7px); background-size: 20px 20px; }
+    input, select { color-scheme: light; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgba(8,127,140,.3); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
   </style>
 </head>
-<body class="min-h-screen text-slate-100 antialiased grid-bg">
-  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-    <header class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
-      <a href="/" class="flex items-center gap-3" aria-label="Accueil Clinique Espoir">
-        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-accent text-ink shadow-lg shadow-teal-950/40">
-          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 4v16M4 12h16" stroke-linecap="round"/></svg>
+<body class="min-h-screen antialiased">
+  <div class="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[440px] soft-grid opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent)]"></div>
+  <div class="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+    <header class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 py-5">
+      <a href="#accueil" class="flex items-center gap-3" aria-label="Clinique Espoir, accueil">
+        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-brand text-white shadow-lg shadow-teal-900/15">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
         </span>
-        <span><span class="block text-sm font-semibold tracking-wide">CLINIQUE ESPOIR</span><span class="block text-xs text-slate-400">Portail des services</span></span>
+        <span><span class="block text-sm font-bold tracking-[.14em] text-ink">CLINIQUE ESPOIR</span><span class="mt-0.5 block text-xs text-slate-500">Portail de coordination des soins</span></span>
       </a>
-      <div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/[.04] px-3 py-2 text-xs text-slate-300">
-        <span id="health-dot" class="h-2 w-2 rounded-full bg-amber-400"></span><span id="health-label">Connexion aux services…</span>
+      <div class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 shadow-sm" role="status" aria-live="polite">
+        <span id="health-dot" class="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
+        <span id="health-label" class="text-xs font-medium text-slate-600">Vérification des services…</span>
       </div>
     </header>
 
-    <main class="py-10 sm:py-14">
-      <section class="mb-10 grid gap-8 lg:grid-cols-[1.2fr_.8fr] lg:items-end">
-        <div>
-          <p class="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent"><span class="h-1.5 w-1.5 rounded-full bg-accent"></span>Plateforme de coordination médicale</p>
-          <h1 class="max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">Des informations de soins, <span class="text-accent">au bon moment.</span></h1>
-          <p class="mt-4 max-w-2xl text-base leading-7 text-slate-400">Consultez les stocks de pharmacie et le suivi des examens radiologiques depuis une interface unique.</p>
+    <main id="accueil">
+      <section class="grid gap-7 py-9 lg:grid-cols-[1.25fr_.75fr] lg:items-stretch lg:py-12">
+        <div class="relative overflow-hidden rounded-[28px] bg-ink px-6 py-8 text-white shadow-card sm:px-9 sm:py-10">
+          <div class="absolute -right-16 -top-24 h-72 w-72 rounded-full border-[42px] border-white/[.035]"></div>
+          <div class="absolute -bottom-32 right-24 h-64 w-64 rounded-full bg-brand/20 blur-3xl"></div>
+          <div class="relative">
+            <p class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[.07] px-3 py-1.5 text-xs font-medium text-teal-100"><span class="h-1.5 w-1.5 rounded-full bg-teal-300"></span>Services connectés en temps réel</p>
+            <h1 class="max-w-2xl text-3xl font-semibold leading-tight tracking-tight sm:text-[42px]">Un suivi plus simple, pour des soins mieux coordonnés.</h1>
+            <p class="mt-4 max-w-xl text-sm leading-6 text-slate-300 sm:text-base">Consultez rapidement la disponibilité d’un médicament ou l’avancement d’un examen radiologique.</p>
+            <div class="mt-7 flex flex-wrap gap-3"><a href="#pharmacie" class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-ink transition hover:bg-teal-50">Voir la pharmacie <span aria-hidden="true">↓</span></a><a href="#radiologie" class="rounded-xl border border-white/20 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Suivre un examen</a></div>
+          </div>
         </div>
-        <div class="glass rounded-2xl border border-white/10 p-4 shadow-glow">
-          <label for="api-key" class="mb-2 block text-xs font-medium uppercase tracking-wider text-slate-400">Clé API <span class="normal-case tracking-normal">(si votre administrateur en a configuré une)</span></label>
-          <div class="flex gap-2"><input id="api-key" type="password" autocomplete="off" placeholder="Saisir la clé d’accès" class="min-w-0 flex-1 rounded-xl border border-white/10 bg-ink/80 px-3 py-2.5 text-sm outline-none placeholder:text-slate-600 focus:border-accent/60"><button id="save-key" class="rounded-xl bg-white/10 px-4 py-2 text-sm font-medium transition hover:bg-white/15">Appliquer</button></div>
-          <p id="key-status" class="mt-2 text-xs text-slate-500">La clé reste dans cette session de navigateur.</p>
-        </div>
+        <aside class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-card sm:p-6">
+          <div class="flex items-center justify-between"><div><p class="text-xs font-semibold uppercase tracking-[.13em] text-slate-400">État des services</p><h2 class="mt-1 text-lg font-semibold text-ink">Disponibilité</h2></div><span class="grid h-10 w-10 place-items-center rounded-xl bg-teal-50 text-brand"><svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 12h4l2.5-7 4.5 14 2.5-7H21" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="mt-5 space-y-3">
+            <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3"><span class="flex items-center gap-3"><span class="grid h-9 w-9 place-items-center rounded-xl bg-white text-brand shadow-sm"><svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M9 3h6v4H9zM7 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/><path d="M9 14h6m-3-3v6" stroke-linecap="round"/></svg></span><span><span class="block text-sm font-semibold">Pharmacie</span><span class="block text-xs text-slate-500">Stocks et disponibilités</span></span></span><span id="pharmacy-state" class="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700">En attente</span></div>
+            <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3"><span class="flex items-center gap-3"><span class="grid h-9 w-9 place-items-center rounded-xl bg-white text-sky-700 shadow-sm"><svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span><span><span class="block text-sm font-semibold">Radiologie</span><span class="block text-xs text-slate-500">Examens et comptes rendus</span></span></span><span id="radiology-state" class="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700">En attente</span></div>
+          </div>
+          <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-xs text-slate-500"><span id="last-check">Dernière vérification : —</span><button id="refresh-all" class="font-semibold text-brand hover:text-teal-800">Actualiser</button></div>
+        </aside>
       </section>
 
-      <section class="grid gap-5 lg:grid-cols-2">
-        <article class="glass rounded-3xl border border-white/10 p-5 shadow-glow sm:p-7">
-          <div class="mb-6 flex items-start justify-between gap-3"><div><div class="mb-3 grid h-10 w-10 place-items-center rounded-xl bg-emerald-400/10 text-accent"><svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3h6v4H9zM7 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/><path d="M9 14h6m-3-3v6" stroke-linecap="round"/></svg></div><h2 class="text-xl font-semibold">Pharmacie</h2><p class="mt-1 text-sm text-slate-400">Disponibilité et quantité en stock</p></div><span id="medicine-count" class="rounded-full bg-white/[.06] px-3 py-1 text-xs text-slate-400">Chargement…</span></div>
-          <form id="stock-form" class="space-y-3"><label for="medicine-id" class="block text-xs font-medium text-slate-400">Identifiant du médicament</label><div class="flex gap-2"><input id="medicine-id" required placeholder="Ex. MED001" class="min-w-0 flex-1 rounded-xl border border-white/10 bg-ink/70 px-4 py-3 text-sm outline-none placeholder:text-slate-600 focus:border-accent/60"><input id="quantity" type="number" min="1" value="1" aria-label="Quantité demandée" class="w-24 rounded-xl border border-white/10 bg-ink/70 px-3 py-3 text-sm outline-none focus:border-accent/60"><button class="rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-ink transition hover:bg-teal-200">Vérifier</button></div></form>
-          <div id="stock-result" class="mt-5 hidden rounded-2xl border border-white/10 bg-ink/50 p-4" aria-live="polite"></div>
-          <div class="mt-7 border-t border-white/10 pt-5"><div class="mb-3 flex items-center justify-between"><h3 class="text-sm font-medium text-slate-200">Médicaments suivis</h3><button id="reload-medicines" class="text-xs text-accent hover:text-teal-200">Actualiser</button></div><div id="medicine-list" class="space-y-2"><p class="text-sm text-slate-500">Chargement des données…</p></div></div>
+      <section class="mb-7 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex sm:items-end sm:gap-4 sm:p-5">
+        <div class="min-w-0 flex-1"><label for="api-url" class="mb-1.5 block text-xs font-semibold text-slate-600">Adresse de l’API</label><input id="api-url" type="url" inputmode="url" autocomplete="url" placeholder="https://votre-api.example.com" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand focus:bg-white"></div>
+        <div class="min-w-0 flex-1"><label for="api-key" class="mb-1.5 block text-xs font-semibold text-slate-600">Clé API <span class="font-normal text-slate-400">(si configurée)</span></label><input id="api-key" type="password" autocomplete="off" placeholder="Votre clé d’accès" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand focus:bg-white"></div>
+        <button id="apply-config" class="mt-3 w-full shrink-0 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 sm:mt-0 sm:w-auto">Connecter</button>
+        <span id="config-note" class="text-xs text-slate-500 sm:col-span-4" aria-live="polite">Pour Vercel, indiquez ici l’adresse publique de l’API.</span>
+      </section>
+
+      <section class="grid items-start gap-6 lg:grid-cols-2">
+        <article id="pharmacie" class="scroll-mt-6 rounded-[26px] border border-slate-200 bg-white p-5 shadow-card sm:p-7">
+          <div class="flex items-start justify-between gap-4"><div class="flex items-center gap-3"><span class="grid h-11 w-11 place-items-center rounded-2xl bg-teal-50 text-brand"><svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M9 3h6v4H9zM7 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/><path d="M9 14h6m-3-3v6" stroke-linecap="round"/></svg></span><div><p class="text-xs font-semibold uppercase tracking-[.12em] text-brand">Pharmacie</p><h2 class="mt-0.5 text-xl font-semibold text-ink">Vérifier un stock</h2></div></div><span id="medicine-count" class="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">— références</span></div>
+          <p class="mt-3 text-sm leading-6 text-slate-500">Recherchez un médicament par son identifiant et indiquez la quantité prescrite.</p>
+          <form id="stock-form" class="mt-5 grid gap-3 sm:grid-cols-[1fr_110px_auto]"><div><label for="medicine-id" class="mb-1.5 block text-xs font-medium text-slate-600">Médicament</label><input id="medicine-id" required maxlength="64" placeholder="Ex. MED001" class="w-full rounded-xl border border-slate-200 px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-brand"></div><div><label for="quantity" class="mb-1.5 block text-xs font-medium text-slate-600">Quantité</label><input id="quantity" type="number" min="1" max="100000" value="1" required class="w-full rounded-xl border border-slate-200 px-3.5 py-3 text-sm outline-none transition focus:border-brand"></div><button class="self-end rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition hover:bg-teal-800">Vérifier</button></form>
+          <div id="stock-result" class="mt-4 hidden" aria-live="polite"></div>
+          <div class="mt-7 border-t border-slate-100 pt-5"><div class="mb-3 flex items-center justify-between gap-3"><h3 class="text-sm font-semibold text-ink">Inventaire disponible</h3><label class="sr-only" for="medicine-filter">Filtrer les médicaments</label><input id="medicine-filter" type="search" placeholder="Filtrer la liste" class="w-40 rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-brand"></div><div class="overflow-x-auto"><table class="w-full min-w-[440px] text-left"><thead><tr class="border-b border-slate-100 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><th class="pb-2 pr-3">Médicament</th><th class="pb-2 pr-3">Référence</th><th class="pb-2 pr-3">Stock</th><th class="pb-2">État</th></tr></thead><tbody id="medicine-list"><tr><td colspan="4" class="py-5 text-center text-sm text-slate-400">Chargement des médicaments…</td></tr></tbody></table></div></div>
         </article>
 
-        <article class="glass rounded-3xl border border-white/10 p-5 shadow-glow sm:p-7">
-          <div class="mb-6"><div class="mb-3 grid h-10 w-10 place-items-center rounded-xl bg-sky-400/10 text-sky-300"><svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></div><h2 class="text-xl font-semibold">Radiologie</h2><p class="mt-1 text-sm text-slate-400">Suivi des examens et de leurs comptes rendus</p></div>
-          <form id="exam-form" class="space-y-3"><div class="grid gap-3 sm:grid-cols-[.8fr_1.2fr]"><div><label for="search-type" class="mb-2 block text-xs font-medium text-slate-400">Recherche par</label><select id="search-type" class="w-full rounded-xl border border-white/10 bg-ink/70 px-3 py-3 text-sm outline-none focus:border-sky-300/60"><option value="patient">Patient</option><option value="exam">Examen</option></select></div><div><label id="exam-id-label" for="exam-id" class="mb-2 block text-xs font-medium text-slate-400">Identifiant patient</label><div class="flex gap-2"><input id="exam-id" required placeholder="Ex. PAT001" class="min-w-0 flex-1 rounded-xl border border-white/10 bg-ink/70 px-4 py-3 text-sm outline-none placeholder:text-slate-600 focus:border-sky-300/60"><button class="rounded-xl bg-sky-300 px-4 py-3 text-sm font-semibold text-ink transition hover:bg-sky-200">Consulter</button></div></div></div></form>
+        <article id="radiologie" class="scroll-mt-6 rounded-[26px] border border-slate-200 bg-white p-5 shadow-card sm:p-7">
+          <div class="flex items-center gap-3"><span class="grid h-11 w-11 place-items-center rounded-2xl bg-sky-50 text-sky-700"><svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span><div><p class="text-xs font-semibold uppercase tracking-[.12em] text-sky-700">Radiologie</p><h2 class="mt-0.5 text-xl font-semibold text-ink">Suivi des examens</h2></div></div>
+          <p class="mt-3 text-sm leading-6 text-slate-500">Consultez un examen précis ou retrouvez les examens associés à un patient.</p>
+          <form id="exam-form" class="mt-5 grid gap-3 sm:grid-cols-[150px_1fr_auto]"><div><label for="search-type" class="mb-1.5 block text-xs font-medium text-slate-600">Rechercher par</label><select id="search-type" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm outline-none focus:border-brand"><option value="patient">Patient</option><option value="exam">Examen</option></select></div><div><label id="exam-id-label" for="exam-id" class="mb-1.5 block text-xs font-medium text-slate-600">Identifiant patient</label><input id="exam-id" required maxlength="64" placeholder="Ex. PAT001" class="w-full rounded-xl border border-slate-200 px-3.5 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-brand"></div><button class="self-end rounded-xl bg-sky-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-800">Consulter</button></form>
           <div id="exam-result" class="mt-5 hidden space-y-3" aria-live="polite"></div>
-          <div class="mt-7 rounded-2xl border border-white/[.07] bg-white/[.025] p-4"><p class="text-xs font-medium uppercase tracking-wider text-slate-500">Services intégrés</p><div class="mt-3 grid grid-cols-2 gap-3"><div class="flex items-center gap-2 text-sm text-slate-300"><span id="pharmacy-dot" class="h-2 w-2 rounded-full bg-amber-400"></span>Pharmacie gRPC</div><div class="flex items-center gap-2 text-sm text-slate-300"><span id="radiology-dot" class="h-2 w-2 rounded-full bg-amber-400"></span>Radiologie gRPC</div></div></div>
+          <div class="mt-7 rounded-2xl border border-slate-100 bg-slate-50 p-4"><div class="flex items-start gap-3"><span class="mt-0.5 text-brand" aria-hidden="true">ⓘ</span><p class="text-xs leading-5 text-slate-500">Les résultats affichés sont des données fictives de démonstration. N’utilisez pas cette interface pour des dossiers médicaux réels.</p></div></div>
         </article>
       </section>
     </main>
 
-    <footer class="flex flex-wrap items-center justify-between gap-2 border-t border-white/10 py-5 text-xs text-slate-500"><span>Clinique Espoir <span id="year"></span> · Démonstration des services gRPC</span><a href="/docs" class="transition hover:text-accent">Documentation API <span aria-hidden="true">↗</span></a></footer>
+    <footer class="mt-9 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 py-5 text-xs text-slate-500"><span>Clinique Espoir · Portail de démonstration · <span id="year"></span></span><a id="docs-link" href="/docs" target="_blank" rel="noreferrer" class="font-semibold text-brand hover:text-teal-800">Documentation API <span aria-hidden="true">↗</span></a></footer>
   </div>
 
   <script>
     const $ = (id) => document.getElementById(id);
-    const state = { apiKey: sessionStorage.getItem('cliniqueApiKey') || '' };
+    const storedBase = localStorage.getItem('cliniqueApiBase') || '';
+    const state = { base: storedBase || window.CLINIQUE_API_BASE_URL || window.location.origin, apiKey: sessionStorage.getItem('cliniqueApiKey') || '', medicines: [] };
+    $('api-url').value = state.base;
     $('api-key').value = state.apiKey;
     $('year').textContent = new Date().getFullYear();
-    $('save-key').addEventListener('click', () => {
-      state.apiKey = $('api-key').value.trim();
-      if (state.apiKey) sessionStorage.setItem('cliniqueApiKey', state.apiKey);
-      else sessionStorage.removeItem('cliniqueApiKey');
-      $('key-status').textContent = state.apiKey ? 'Clé appliquée pour cette session.' : 'Aucune clé enregistrée pour cette session.';
-      loadMedicines(); checkHealth();
-    });
+    $('docs-link').href = `${state.base.replace(/\/$/, '')}/docs`;
+
+    function safeBase(value) {
+      const url = new URL(value || window.location.origin, window.location.href);
+      if (!['http:', 'https:'].includes(url.protocol)) throw new Error('L’adresse API doit commencer par http:// ou https://.');
+      return url.origin;
+    }
     async function api(path, options = {}) {
       const headers = new Headers(options.headers || {});
       if (state.apiKey) headers.set('X-API-Key', state.apiKey);
       if (options.body) headers.set('Content-Type', 'application/json');
-      const response = await fetch(path, { ...options, headers });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.detail?.message || data.detail || `Erreur HTTP ${response.status}`);
-      return data;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 7000);
+      try {
+        const response = await fetch(new URL(path, `${state.base.replace(/\/$/, '')}/`), { ...options, headers, signal: controller.signal });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          if (response.status === 401) throw new Error('Clé API manquante ou incorrecte. Vérifiez la clé puis cliquez sur Connecter.');
+          throw new Error(data.detail?.message || data.detail || `La requête a échoué (HTTP ${response.status}).`);
+        }
+        return data;
+      } catch (error) {
+        if (error.name === 'AbortError') throw new Error('Le service met trop de temps à répondre. Réessayez dans quelques instants.');
+        if (error instanceof TypeError) throw new Error('API inaccessible. Vérifiez son adresse et, si elle est sur un autre domaine, sa configuration CORS.');
+        throw error;
+      } finally { clearTimeout(timeout); }
     }
-    function showMessage(target, message, bad = true) {
+    function message(target, text, tone = 'error') {
       target.replaceChildren(); target.classList.remove('hidden');
-      const p = document.createElement('p'); p.className = `text-sm ${bad ? 'text-rose-300' : 'text-emerald-300'}`; p.textContent = message; target.append(p);
+      const box = document.createElement('div');
+      box.className = `rounded-xl border px-4 py-3 text-sm ${tone === 'success' ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-rose-200 bg-rose-50 text-rose-700'}`;
+      box.textContent = text; target.append(box);
     }
     function renderMedicines(items) {
-      const list = $('medicine-list'); list.replaceChildren(); $('medicine-count').textContent = `${items.length} référence${items.length > 1 ? 's' : ''}`;
-      if (!items.length) { list.innerHTML = '<p class="text-sm text-slate-500">Aucun médicament disponible.</p>'; return; }
-      items.forEach((med) => {
-        const row = document.createElement('button'); row.type = 'button'; row.className = 'flex w-full items-center justify-between gap-3 rounded-xl border border-white/[.06] bg-white/[.025] px-3 py-3 text-left transition hover:border-accent/25 hover:bg-white/[.045]';
-        const info = document.createElement('span'); info.className = 'min-w-0';
-        const name = document.createElement('span'); name.className = 'block truncate text-sm font-medium text-slate-200'; name.textContent = med.nom;
-        const meta = document.createElement('span'); meta.className = 'mt-1 block text-xs text-slate-500'; meta.textContent = `${med.medicament_id} · ${med.emplacement || 'Emplacement non précisé'}`;
-        const count = document.createElement('span'); count.className = 'shrink-0 rounded-lg bg-white/[.06] px-2.5 py-1.5 text-xs text-slate-300'; count.textContent = `${med.quantite} unités`;
-        info.append(name, meta); row.append(info, count); row.addEventListener('click', () => { $('medicine-id').value = med.medicament_id; $('stock-form').requestSubmit(); }); list.append(row);
+      state.medicines = items;
+      const filter = $('medicine-filter').value.trim().toLocaleLowerCase('fr');
+      const visible = items.filter((m) => `${m.nom} ${m.medicament_id}`.toLocaleLowerCase('fr').includes(filter));
+      $('medicine-count').textContent = `${items.length} référence${items.length > 1 ? 's' : ''}`;
+      const body = $('medicine-list'); body.replaceChildren();
+      if (!visible.length) { const row = document.createElement('tr'); const cell = document.createElement('td'); cell.colSpan = 4; cell.className = 'py-5 text-center text-sm text-slate-400'; cell.textContent = filter ? 'Aucun résultat pour ce filtre.' : 'Aucun médicament disponible.'; row.append(cell); body.append(row); return; }
+      visible.forEach((med) => {
+        const row = document.createElement('tr'); row.className = 'border-b border-slate-50 last:border-0';
+        const name = document.createElement('td'); name.className = 'py-3 pr-3 text-sm font-medium text-ink'; name.textContent = med.nom;
+        const id = document.createElement('td'); id.className = 'py-3 pr-3 text-xs text-slate-500'; id.textContent = med.medicament_id;
+        const quantity = document.createElement('td'); quantity.className = 'py-3 pr-3 text-sm text-slate-700'; quantity.textContent = `${med.quantite} unités`;
+        const status = document.createElement('td'); status.className = 'py-3';
+        const badge = document.createElement('span'); const isLow = ['rupture', 'stock_critique'].includes(med.statut); badge.className = `inline-flex rounded-full px-2.5 py-1 text-[11px] font-medium ${isLow ? 'bg-amber-50 text-amber-800' : 'bg-emerald-50 text-emerald-800'}`; badge.textContent = String(med.statut || 'inconnu').replaceAll('_', ' '); status.append(badge);
+        row.append(name, id, quantity, status); row.tabIndex = 0; row.setAttribute('role', 'button'); row.setAttribute('aria-label', `Vérifier ${med.nom}`);
+        const select = () => { $('medicine-id').value = med.medicament_id; $('stock-form').requestSubmit(); };
+        row.addEventListener('click', select); row.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); select(); } }); body.append(row);
       });
     }
     async function loadMedicines() {
       try { const data = await api('/api/v1/pharmacie/medicaments'); renderMedicines(data.medicaments || []); }
-      catch (error) { $('medicine-count').textContent = 'Indisponible'; showMessage($('medicine-list'), error.message); }
+      catch (error) {
+        $('medicine-count').textContent = 'Non connecté';
+        const body = $('medicine-list'); body.replaceChildren();
+        const row = document.createElement('tr'); const cell = document.createElement('td'); cell.colSpan = 4; cell.className = 'py-5 text-center text-sm text-rose-700'; cell.textContent = error.message; row.append(cell); body.append(row);
+      }
     }
-    $('reload-medicines').addEventListener('click', loadMedicines);
-    $('stock-form').addEventListener('submit', async (event) => {
-      event.preventDefault(); const result = $('stock-result'); result.classList.remove('hidden'); result.innerHTML = '<p class="text-sm text-slate-400">Vérification du stock…</p>';
-      try {
-        const id = encodeURIComponent($('medicine-id').value.trim()); const quantity = encodeURIComponent($('quantity').value || '1');
-        const data = await api(`/api/v1/pharmacie/medicaments/${id}/stock?quantite_demandee=${quantity}`);
-        result.replaceChildren(); const title = document.createElement('p'); title.className = 'font-medium text-slate-100'; title.textContent = data.nom;
-        const detail = document.createElement('p'); detail.className = `mt-2 text-sm ${data.disponible ? 'text-emerald-300' : 'text-amber-300'}`; detail.textContent = data.message;
-        const stock = document.createElement('p'); stock.className = 'mt-1 text-xs text-slate-400'; stock.textContent = `${data.quantite} unité(s) en stock · ${data.emplacement || 'Emplacement non précisé'}`;
-        result.append(title, detail, stock);
-      } catch (error) { showMessage(result, error.message); }
-    });
-    $('search-type').addEventListener('change', () => {
-      const byPatient = $('search-type').value === 'patient';
-      $('exam-id-label').textContent = byPatient ? 'Identifiant patient' : 'Identifiant examen';
-      $('exam-id').placeholder = byPatient ? 'Ex. PAT001' : 'Ex. RAD001';
-    });
-    $('exam-form').addEventListener('submit', async (event) => {
-      event.preventDefault(); const target = $('exam-result'); target.replaceChildren(); target.classList.remove('hidden');
-      const wait = document.createElement('p'); wait.className = 'text-sm text-slate-400'; wait.textContent = 'Recherche des examens…'; target.append(wait);
-      try {
-        const id = encodeURIComponent($('exam-id').value.trim()); const path = $('search-type').value === 'patient' ? `/api/v1/radiologie/patients/${id}/examens` : `/api/v1/radiologie/examens/${id}`;
-        const data = await api(path); target.replaceChildren();
-        if (!data.examens?.length) { showMessage(target, 'Aucun examen trouvé.', false); return; }
-        data.examens.forEach((exam) => {
-          const card = document.createElement('article'); card.className = 'rounded-2xl border border-white/10 bg-ink/50 p-4';
-          const head = document.createElement('div'); head.className = 'flex flex-wrap items-center justify-between gap-2';
-          const name = document.createElement('h3'); name.className = 'font-medium text-slate-100'; name.textContent = exam.type_examen;
-          const badge = document.createElement('span'); badge.className = 'rounded-full bg-sky-300/10 px-2.5 py-1 text-xs text-sky-200'; badge.textContent = String(exam.etat).replaceAll('_', ' ');
-          head.append(name, badge);
-          const meta = document.createElement('p'); meta.className = 'mt-2 text-xs text-slate-500'; meta.textContent = `${exam.examen_id} · Patient ${exam.patient_id} · ${exam.date}`;
-          const result = document.createElement('p'); result.className = 'mt-3 text-sm leading-6 text-slate-300'; result.textContent = exam.resultat || 'Compte rendu non disponible.';
-          card.append(head, meta, result); target.append(card);
-        });
-      } catch (error) { showMessage(target, error.message); }
-    });
     async function checkHealth() {
       try {
-        const health = await api('/health/ready'); const ready = health.status === 'ready';
-        $('health-dot').className = `h-2 w-2 rounded-full ${ready ? 'bg-emerald-400' : 'bg-rose-400'}`;
-        $('health-label').textContent = ready ? 'Services opérationnels' : 'Services indisponibles';
-        $('pharmacy-dot').className = `h-2 w-2 rounded-full ${health.services?.pharmacie ? 'bg-emerald-400' : 'bg-rose-400'}`;
-        $('radiology-dot').className = `h-2 w-2 rounded-full ${health.services?.radiologie ? 'bg-emerald-400' : 'bg-rose-400'}`;
-      } catch (_) { $('health-dot').className = 'h-2 w-2 rounded-full bg-rose-400'; $('health-label').textContent = 'Connexion indisponible'; }
+        const health = await api('/health/ready'); const services = health.services || {};
+        for (const [key, element] of [['pharmacie', 'pharmacy-state'], ['radiologie', 'radiology-state']]) {
+          const ready = services[key] === true; const node = $(element); node.textContent = ready ? 'Opérationnel' : 'Indisponible'; node.className = `rounded-full px-2.5 py-1 text-xs font-medium ${ready ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-700'}`;
+        }
+        const ready = health.status === 'ready'; $('health-dot').className = `h-2.5 w-2.5 rounded-full ${ready ? 'bg-emerald-500' : 'bg-rose-500'}`; $('health-label').textContent = ready ? 'Tous les services sont prêts' : 'Un service est indisponible';
+      } catch (error) {
+        $('health-dot').className = 'h-2.5 w-2.5 rounded-full bg-rose-500'; $('health-label').textContent = 'API non joignable';
+        for (const id of ['pharmacy-state', 'radiology-state']) { $(id).textContent = 'Indisponible'; $(id).className = 'rounded-full bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-700'; }
+      }
+      $('last-check').textContent = `Dernière vérification : ${new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' }).format(new Date())}`;
     }
-    checkHealth(); loadMedicines();
+    async function refresh() { await checkHealth(); await loadMedicines(); }
+    $('apply-config').addEventListener('click', async () => {
+      try {
+        state.base = safeBase($('api-url').value.trim()); state.apiKey = $('api-key').value.trim();
+        localStorage.setItem('cliniqueApiBase', state.base);
+        if (state.apiKey) sessionStorage.setItem('cliniqueApiKey', state.apiKey); else sessionStorage.removeItem('cliniqueApiKey');
+        $('docs-link').href = `${state.base}/docs`; $('config-note').textContent = 'Configuration appliquée.';
+        await refresh();
+      } catch (error) { $('config-note').textContent = error.message; }
+    });
+    $('refresh-all').addEventListener('click', refresh);
+    $('medicine-filter').addEventListener('input', () => renderMedicines(state.medicines));
+    $('stock-form').addEventListener('submit', async (event) => {
+      event.preventDefault(); const target = $('stock-result'); target.replaceChildren(); target.classList.remove('hidden');
+      const wait = document.createElement('div'); wait.className = 'rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-500'; wait.textContent = 'Vérification du stock…'; target.append(wait);
+      try {
+        const id = encodeURIComponent($('medicine-id').value.trim()); const quantity = encodeURIComponent($('quantity').value);
+        const data = await api(`/api/v1/pharmacie/medicaments/${id}/stock?quantite_demandee=${quantity}`);
+        target.replaceChildren(); target.classList.remove('hidden'); const card = document.createElement('div'); card.className = 'rounded-2xl border border-slate-200 bg-slate-50 p-4';
+        const top = document.createElement('div'); top.className = 'flex items-start justify-between gap-3'; const title = document.createElement('h3'); title.className = 'font-semibold text-ink'; title.textContent = data.nom;
+        const badge = document.createElement('span'); badge.className = `rounded-full px-2.5 py-1 text-xs font-semibold ${data.disponible ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`; badge.textContent = data.disponible ? 'Disponible' : 'Stock insuffisant'; top.append(title, badge);
+        const detail = document.createElement('p'); detail.className = 'mt-2 text-sm text-slate-600'; detail.textContent = data.message;
+        const meta = document.createElement('p'); meta.className = 'mt-1 text-xs text-slate-500'; meta.textContent = `${data.quantite} unité(s) en stock · ${data.emplacement || 'Emplacement non précisé'}`; card.append(top, detail, meta); target.append(card);
+      } catch (error) { message(target, error.message); }
+    });
+    $('search-type').addEventListener('change', () => { const byPatient = $('search-type').value === 'patient'; $('exam-id-label').textContent = byPatient ? 'Identifiant patient' : 'Identifiant examen'; $('exam-id').placeholder = byPatient ? 'Ex. PAT001' : 'Ex. RAD001'; });
+    $('exam-form').addEventListener('submit', async (event) => {
+      event.preventDefault(); const target = $('exam-result'); target.replaceChildren(); target.classList.remove('hidden');
+      const wait = document.createElement('div'); wait.className = 'rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-500'; wait.textContent = 'Recherche des examens…'; target.append(wait);
+      try {
+        const id = encodeURIComponent($('exam-id').value.trim()); const path = $('search-type').value === 'patient' ? `/api/v1/radiologie/patients/${id}/examens` : `/api/v1/radiologie/examens/${id}`;
+        const data = await api(path); target.replaceChildren(); target.classList.remove('hidden');
+        if (!data.examens?.length) { message(target, 'Aucun examen trouvé.', 'success'); return; }
+        data.examens.forEach((exam) => {
+          const card = document.createElement('article'); card.className = 'rounded-2xl border border-slate-200 p-4'; const head = document.createElement('div'); head.className = 'flex flex-wrap items-center justify-between gap-2';
+          const title = document.createElement('h3'); title.className = 'font-semibold text-ink'; title.textContent = exam.type_examen;
+          const badge = document.createElement('span'); badge.className = 'rounded-full bg-sky-50 px-2.5 py-1 text-xs font-medium text-sky-800'; badge.textContent = String(exam.etat).replaceAll('_', ' '); head.append(title, badge);
+          const meta = document.createElement('p'); meta.className = 'mt-2 text-xs text-slate-500'; meta.textContent = `${exam.examen_id} · Patient ${exam.patient_id} · ${exam.date}`;
+          const result = document.createElement('p'); result.className = 'mt-3 text-sm leading-6 text-slate-600'; result.textContent = exam.resultat || 'Compte rendu non disponible.'; card.append(head, meta, result); target.append(card);
+        });
+      } catch (error) { message(target, error.message); }
+    });
+    refresh();
   </script>
 </body>
 </html>
