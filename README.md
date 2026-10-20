@@ -70,7 +70,21 @@ lancent depuis la racine du dépôt :
 python tests/test_pharmacie_rpc.py
 python tests/test_radiologie_rpc.py
 python tests/test_delais_rpc.py
+python tests/test_medecin_integration.py
 ```
+
+Un client médecin de démonstration est disponible pour valider l'appel aux deux
+services une fois ceux-ci démarrés :
+
+```powershell
+python -m grpc_services.medecin_client pharmacie MED001 --quantite 2
+python -m grpc_services.medecin_client radiologie --patient PAT001
+python -m grpc_services.medecin_client radiologie --examen RAD001
+```
+
+Ce client sert de référence d'intégration locale. Le client médecin de l'équipe
+pourra reprendre les mêmes stubs et confirmer ses contrats avant l'intégration
+finale.
 
 ## 6. Équipe
 
