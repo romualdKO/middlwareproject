@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package clinique.pharmacie;
+
+service PharmacieService {
+  rpc VerifierStock (VerifierStockRequest) returns (VerifierStockResponse);
+}
+
+message VerifierStockRequest {
+  string medicament_id = 1;
+}
+
+message VerifierStockResponse {
+  string medicament_id = 1;
+  string nom = 2;
+  bool disponible = 3;
+  int32 quantite = 4;
+  string message = 5;
+}

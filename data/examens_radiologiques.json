@@ -1,0 +1,5 @@
+{
+  "RAD001": {"type_examen": "Radiographie thoracique", "etat": "termine", "resultat": "Aucune anomalie détectée."},
+  "RAD002": {"type_examen": "IRM cérébrale", "etat": "en_attente", "resultat": ""},
+  "RAD003": {"type_examen": "Scanner abdominal", "etat": "en_cours", "resultat": ""}
+}

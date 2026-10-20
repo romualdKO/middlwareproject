@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package clinique.radiologie;
+
+service RadiologieService {
+  rpc ObtenirExamen (ObtenirExamenRequest) returns (ObtenirExamenResponse);
+}
+
+message ObtenirExamenRequest {
+  string examen_id = 1;
+}
+
+message ObtenirExamenResponse {
+  string examen_id = 1;
+  string type_examen = 2;
+  string etat = 3;
+  string resultat = 4;
+  string message = 5;
+}

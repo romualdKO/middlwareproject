@@ -46,7 +46,28 @@ python -m pip install -r requirements.txt
 
 ## 5. Exécution
 
-Les commandes de lancement seront ajoutées au fur et à mesure de l'implémentation des services.
+Les contrats pharmacie et radiologie sont dans `proto/`. Après installation des
+dépendances, les modules Python peuvent être régénérés avec :
+
+```powershell
+python -m grpc_services.generate_proto
+```
+
+Lancer chaque serveur dans son propre terminal :
+
+```powershell
+python -m grpc_services.pharmacie_server  # port 50052
+python -m grpc_services.radiologie_server # port 50053
+```
+
+Les données de démonstration sont dans `data/medicaments.json` et
+`data/examens_radiologiques.json`. Les tests RPC individuels démarrent un serveur
+local sur un port libre et se lancent depuis la racine du dépôt :
+
+```powershell
+python tests/test_pharmacie_rpc.py
+python tests/test_radiologie_rpc.py
+```
 
 ## 6. Équipe
 
