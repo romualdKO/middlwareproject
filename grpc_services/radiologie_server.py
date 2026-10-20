@@ -1,56 +1,83 @@
-"""Serveur gRPC de consultation de l'état des examens radiologiques."""
+"""Serveur gRPC autonome de consultation des examens radiologiques."""
 from concurrent import futures
-import json
+import os
 from pathlib import Path
 import sys
+import time
 
 import grpc
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from data.mock_pharmacie_radio import EXAMENS
 from grpc_services.generated import radiologie_pb2, radiologie_pb2_grpc
 
-DATA_PATH = ROOT / "data" / "examens_radiologiques.json"
 DEFAULT_PORT = 50053
-
-
-def charger_examens(path=DATA_PATH):
-    with Path(path).open(encoding="utf-8") as fichier:
-        donnees = json.load(fichier)
-    if not isinstance(donnees, dict):
-        raise ValueError("Le fichier des examens doit contenir un objet JSON.")
-    return donnees
+ETATS_VALIDES = {"en_attente", "en_cours", "termine"}
 
 
 class RadiologieServicer(radiologie_pb2_grpc.RadiologieServiceServicer):
-    ETATS_VALIDES = {"en_attente", "en_cours", "termine"}
-
-    def __init__(self, examens=None):
-        self.examens = examens if examens is not None else charger_examens()
+    def __init__(self, examens=None, latence_ms=None):
+        self.examens = examens if examens is not None else EXAMENS
+        self.latence_ms = int(os.getenv("RADIOLOGIE_LATENCE_MS", "0")) if latence_ms is None else latence_ms
+        if self.latence_ms < 0:
+            raise ValueError("La latence simulée ne peut pas être négative.")
 
     def ObtenirExamen(self, request, context):
         examen_id = request.examen_id.strip()
-        if not examen_id:
-            context.abort(grpc.StatusCode.INVALID_ARGUMENT, "examen_id est obligatoire.")
-        examen = self.examens.get(examen_id)
-        if examen is None:
-            context.abort(grpc.StatusCode.NOT_FOUND, f"Examen introuvable : {examen_id}.")
-        etat = examen.get("etat", "")
-        if etat not in self.ETATS_VALIDES:
-            context.abort(grpc.StatusCode.INTERNAL, "L'état de l'examen est invalide.")
+        patient_id = request.patient_id.strip()
+        if not examen_id and not patient_id:
+            context.abort(grpc.StatusCode.INVALID_ARGUMENT, "examen_id ou patient_id est obligatoire.")
+        if self.latence_ms:
+            time.sleep(self.latence_ms / 1000)
+
+        if examen_id:
+            examen = self.examens.get(examen_id)
+            if examen is None or (patient_id and examen.get("patient_id") != patient_id):
+                context.abort(grpc.StatusCode.NOT_FOUND, "Examen introuvable pour les critères fournis.")
+            selection = [(examen_id, examen)]
+        else:
+            selection = [
+                (identifiant, examen)
+                for identifiant, examen in self.examens.items()
+                if examen.get("patient_id") == patient_id
+            ]
+            if not selection:
+                context.abort(grpc.StatusCode.NOT_FOUND, f"Aucun examen trouvé pour le patient {patient_id}.")
+
+        for _, examen in selection:
+            if examen.get("etat") not in ETATS_VALIDES:
+                context.abort(grpc.StatusCode.INTERNAL, "L'état d'un examen est invalide.")
+
+        examens = [
+            radiologie_pb2.Examen(
+                examen_id=identifiant,
+                patient_id=examen.get("patient_id", ""),
+                type_examen=examen.get("type_examen", ""),
+                etat=examen.get("etat", ""),
+                resultat=examen.get("resultat", ""),
+                date=examen.get("date", ""),
+            )
+            for identifiant, examen in selection
+        ]
+        premier = examens[0]
         return radiologie_pb2.ObtenirExamenResponse(
-            examen_id=examen_id,
-            type_examen=examen.get("type_examen", ""),
-            etat=etat,
-            resultat=examen.get("resultat", ""),
-            message="Examen trouvé",
+            examen_id=premier.examen_id,
+            type_examen=premier.type_examen,
+            etat=premier.etat,
+            resultat=premier.resultat,
+            message=f"{len(examens)} examen(s) trouvé(s)",
+            patient_id=premier.patient_id,
+            examens=examens,
         )
 
 
-def serve(port=DEFAULT_PORT):
+def serve(port=None):
+    port = int(port or os.getenv("RADIOLOGIE_PORT", DEFAULT_PORT))
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     radiologie_pb2_grpc.add_RadiologieServiceServicer_to_server(RadiologieServicer(), server)
-    server.add_insecure_port(f"[::]:{port}")
+    if server.add_insecure_port(f"[::]:{port}") == 0:
+        raise RuntimeError(f"Impossible d'écouter sur le port {port}.")
     server.start()
     print(f"Serveur radiologie démarré sur le port {port}")
     server.wait_for_termination()

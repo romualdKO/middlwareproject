@@ -8,6 +8,7 @@ service RadiologieService {
 
 message ObtenirExamenRequest {
   string examen_id = 1;
+  string patient_id = 2;
 }
 
 message ObtenirExamenResponse {
@@ -16,4 +17,15 @@ message ObtenirExamenResponse {
   string etat = 3;
   string resultat = 4;
   string message = 5;
+  string patient_id = 6;
+  repeated Examen examens = 7;
+}
+
+message Examen {
+  string examen_id = 1;
+  string patient_id = 2;
+  string type_examen = 3;
+  string etat = 4;
+  string resultat = 5;
+  string date = 6;
 }

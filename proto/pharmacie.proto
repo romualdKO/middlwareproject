@@ -8,6 +8,7 @@ service PharmacieService {
 
 message VerifierStockRequest {
   string medicament_id = 1;
+  optional int32 quantite_demandee = 2;
 }
 
 message VerifierStockResponse {
@@ -16,4 +17,7 @@ message VerifierStockResponse {
   bool disponible = 3;
   int32 quantite = 4;
   string message = 5;
+  string emplacement = 6;
+  string statut = 7;
+  int32 quantite_demandee = 8;
 }

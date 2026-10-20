@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10radiologie.proto\x12\x13\x63linique.radiologie\")\n\x14ObtenirExamenRequest\x12\x11\n\texamen_id\x18\x01 \x01(\t\"p\n\x15ObtenirExamenResponse\x12\x11\n\texamen_id\x18\x01 \x01(\t\x12\x13\n\x0btype_examen\x18\x02 \x01(\t\x12\x0c\n\x04\x65tat\x18\x03 \x01(\t\x12\x10\n\x08resultat\x18\x04 \x01(\t\x12\x0f\n\x07message\x18\x05 \x01(\t2{\n\x11RadiologieService\x12\x66\n\rObtenirExamen\x12).clinique.radiologie.ObtenirExamenRequest\x1a*.clinique.radiologie.ObtenirExamenResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10radiologie.proto\x12\x13\x63linique.radiologie\"=\n\x14ObtenirExamenRequest\x12\x11\n\texamen_id\x18\x01 \x01(\t\x12\x12\n\npatient_id\x18\x02 \x01(\t\"\xb2\x01\n\x15ObtenirExamenResponse\x12\x11\n\texamen_id\x18\x01 \x01(\t\x12\x13\n\x0btype_examen\x18\x02 \x01(\t\x12\x0c\n\x04\x65tat\x18\x03 \x01(\t\x12\x10\n\x08resultat\x18\x04 \x01(\t\x12\x0f\n\x07message\x18\x05 \x01(\t\x12\x12\n\npatient_id\x18\x06 \x01(\t\x12,\n\x07\x65xamens\x18\x07 \x03(\x0b\x32\x1b.clinique.radiologie.Examen\"r\n\x06\x45xamen\x12\x11\n\texamen_id\x18\x01 \x01(\t\x12\x12\n\npatient_id\x18\x02 \x01(\t\x12\x13\n\x0btype_examen\x18\x03 \x01(\t\x12\x0c\n\x04\x65tat\x18\x04 \x01(\t\x12\x10\n\x08resultat\x18\x05 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x06 \x01(\t2{\n\x11RadiologieService\x12\x66\n\rObtenirExamen\x12).clinique.radiologie.ObtenirExamenRequest\x1a*.clinique.radiologie.ObtenirExamenResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,9 +32,11 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'radiologie_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_OBTENIREXAMENREQUEST']._serialized_start=41
-  _globals['_OBTENIREXAMENREQUEST']._serialized_end=82
-  _globals['_OBTENIREXAMENRESPONSE']._serialized_start=84
-  _globals['_OBTENIREXAMENRESPONSE']._serialized_end=196
-  _globals['_RADIOLOGIESERVICE']._serialized_start=198
-  _globals['_RADIOLOGIESERVICE']._serialized_end=321
+  _globals['_OBTENIREXAMENREQUEST']._serialized_end=102
+  _globals['_OBTENIREXAMENRESPONSE']._serialized_start=105
+  _globals['_OBTENIREXAMENRESPONSE']._serialized_end=283
+  _globals['_EXAMEN']._serialized_start=285
+  _globals['_EXAMEN']._serialized_end=399
+  _globals['_RADIOLOGIESERVICE']._serialized_start=401
+  _globals['_RADIOLOGIESERVICE']._serialized_end=524
 # @@protoc_insertion_point(module_scope)

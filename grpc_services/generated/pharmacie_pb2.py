@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fpharmacie.proto\x12\x12\x63linique.pharmacie\"-\n\x14VerifierStockRequest\x12\x15\n\rmedicament_id\x18\x01 \x01(\t\"r\n\x15VerifierStockResponse\x12\x15\n\rmedicament_id\x18\x01 \x01(\t\x12\x0b\n\x03nom\x18\x02 \x01(\t\x12\x12\n\ndisponible\x18\x03 \x01(\x08\x12\x10\n\x08quantite\x18\x04 \x01(\x05\x12\x0f\n\x07message\x18\x05 \x01(\t2x\n\x10PharmacieService\x12\x64\n\rVerifierStock\x12(.clinique.pharmacie.VerifierStockRequest\x1a).clinique.pharmacie.VerifierStockResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fpharmacie.proto\x12\x12\x63linique.pharmacie\"c\n\x14VerifierStockRequest\x12\x15\n\rmedicament_id\x18\x01 \x01(\t\x12\x1e\n\x11quantite_demandee\x18\x02 \x01(\x05H\x00\x88\x01\x01\x42\x14\n\x12_quantite_demandee\"\xb2\x01\n\x15VerifierStockResponse\x12\x15\n\rmedicament_id\x18\x01 \x01(\t\x12\x0b\n\x03nom\x18\x02 \x01(\t\x12\x12\n\ndisponible\x18\x03 \x01(\x08\x12\x10\n\x08quantite\x18\x04 \x01(\x05\x12\x0f\n\x07message\x18\x05 \x01(\t\x12\x13\n\x0b\x65mplacement\x18\x06 \x01(\t\x12\x0e\n\x06statut\x18\x07 \x01(\t\x12\x19\n\x11quantite_demandee\x18\x08 \x01(\x05\x32x\n\x10PharmacieService\x12\x64\n\rVerifierStock\x12(.clinique.pharmacie.VerifierStockRequest\x1a).clinique.pharmacie.VerifierStockResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,9 +32,9 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'pharmacie_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_VERIFIERSTOCKREQUEST']._serialized_start=39
-  _globals['_VERIFIERSTOCKREQUEST']._serialized_end=84
-  _globals['_VERIFIERSTOCKRESPONSE']._serialized_start=86
-  _globals['_VERIFIERSTOCKRESPONSE']._serialized_end=200
-  _globals['_PHARMACIESERVICE']._serialized_start=202
-  _globals['_PHARMACIESERVICE']._serialized_end=322
+  _globals['_VERIFIERSTOCKREQUEST']._serialized_end=138
+  _globals['_VERIFIERSTOCKRESPONSE']._serialized_start=141
+  _globals['_VERIFIERSTOCKRESPONSE']._serialized_end=319
+  _globals['_PHARMACIESERVICE']._serialized_start=321
+  _globals['_PHARMACIESERVICE']._serialized_end=441
 # @@protoc_insertion_point(module_scope)

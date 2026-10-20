@@ -60,13 +60,16 @@ python -m grpc_services.pharmacie_server  # port 50052
 python -m grpc_services.radiologie_server # port 50053
 ```
 
-Les données de démonstration sont dans `data/medicaments.json` et
-`data/examens_radiologiques.json`. Les tests RPC individuels démarrent un serveur
-local sur un port libre et se lancent depuis la racine du dépôt :
+Les données de démonstration sont dans `data/mock_pharmacie_radio.py`. Les ports
+et latences peuvent être configurés avec `PHARMACIE_PORT`, `RADIOLOGIE_PORT`,
+`PHARMACIE_LATENCE_MS` et `RADIOLOGIE_LATENCE_MS` (latence en millisecondes).
+Les tests RPC individuels démarrent un serveur local sur un port libre et se
+lancent depuis la racine du dépôt :
 
 ```powershell
 python tests/test_pharmacie_rpc.py
 python tests/test_radiologie_rpc.py
+python tests/test_delais_rpc.py
 ```
 
 ## 6. Équipe

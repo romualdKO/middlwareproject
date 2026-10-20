@@ -23,12 +23,27 @@ def main():
             reponse = stub.VerifierStock(pharmacie_pb2.VerifierStockRequest(medicament_id="TEST001"), timeout=3)
             assert reponse.disponible and reponse.quantite == 7
             print(f"OK pharmacie : {reponse.nom}, quantité={reponse.quantite}")
+            reponse = stub.VerifierStock(
+                pharmacie_pb2.VerifierStockRequest(medicament_id="TEST001", quantite_demandee=7), timeout=3
+            )
+            assert reponse.disponible and reponse.statut == "disponible"
+            reponse = stub.VerifierStock(
+                pharmacie_pb2.VerifierStockRequest(medicament_id="TEST001", quantite_demandee=8), timeout=3
+            )
+            assert not reponse.disponible and reponse.statut == "insuffisant"
             for identifiant, statut in (("", grpc.StatusCode.INVALID_ARGUMENT), ("ABSENT", grpc.StatusCode.NOT_FOUND)):
                 try:
                     stub.VerifierStock(pharmacie_pb2.VerifierStockRequest(medicament_id=identifiant), timeout=3)
                     raise AssertionError(f"Le statut {statut} était attendu")
                 except grpc.RpcError as erreur:
                     assert erreur.code() == statut
+            try:
+                stub.VerifierStock(
+                    pharmacie_pb2.VerifierStockRequest(medicament_id="TEST001", quantite_demandee=0), timeout=3
+                )
+                raise AssertionError("INVALID_ARGUMENT était attendu pour une quantité nulle")
+            except grpc.RpcError as erreur:
+                assert erreur.code() == grpc.StatusCode.INVALID_ARGUMENT
             print("OK pharmacie : requêtes invalides et médicaments absents gérés")
     finally:
         server.stop(0).wait()

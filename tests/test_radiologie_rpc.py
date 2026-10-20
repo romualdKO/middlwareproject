@@ -13,7 +13,10 @@ from grpc_services.radiologie_server import RadiologieServicer
 def main():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
     radiologie_pb2_grpc.add_RadiologieServiceServicer_to_server(
-        RadiologieServicer({"TEST-RAD": {"type_examen": "IRM test", "etat": "termine", "resultat": "Normal"}}), server
+        RadiologieServicer({
+            "TEST-RAD": {"patient_id": "PAT-TEST", "type_examen": "IRM test", "etat": "termine", "resultat": "Normal"},
+            "TEST-RAD-2": {"patient_id": "PAT-TEST", "type_examen": "Scanner test", "etat": "en_attente", "resultat": ""},
+        }), server
     )
     port = server.add_insecure_port("127.0.0.1:0")
     server.start()
@@ -23,6 +26,10 @@ def main():
             reponse = stub.ObtenirExamen(radiologie_pb2.ObtenirExamenRequest(examen_id="TEST-RAD"), timeout=3)
             assert reponse.etat == "termine" and reponse.resultat == "Normal"
             print(f"OK radiologie : {reponse.type_examen}, état={reponse.etat}")
+            par_patient = stub.ObtenirExamen(
+                radiologie_pb2.ObtenirExamenRequest(patient_id="PAT-TEST"), timeout=3
+            )
+            assert len(par_patient.examens) == 2
             for identifiant, statut in (("", grpc.StatusCode.INVALID_ARGUMENT), ("ABSENT", grpc.StatusCode.NOT_FOUND)):
                 try:
                     stub.ObtenirExamen(radiologie_pb2.ObtenirExamenRequest(examen_id=identifiant), timeout=3)

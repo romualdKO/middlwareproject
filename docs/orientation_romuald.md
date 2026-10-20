@@ -24,8 +24,9 @@ partie du projet de façon autonome et recentrer les évolutions futures.
   contrat commun le permet, par identifiant patient.
 - Gérer les arguments invalides et les éléments absents avec les statuts gRPC
   appropriés (`INVALID_ARGUMENT`, `NOT_FOUND`).
-- Ajouter une latence configurable pour éprouver les délais d'attente côté
-  client sans rendre les serveurs dépendants d'un service externe.
+- Latence configurable maintenant disponible via `PHARMACIE_LATENCE_MS` et
+  `RADIOLOGIE_LATENCE_MS`, et ports configurables via `PHARMACIE_PORT` et
+  `RADIOLOGIE_PORT`.
 - Garder les contrats `.proto` comme interface partagée et vérifier leur
   compatibilité avant de modifier les messages ou les méthodes RPC.
 
