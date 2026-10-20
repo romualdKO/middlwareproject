@@ -1,5 +1,6 @@
 
 grpcio
+grpcio-health-checking
 grpcio-tools
 fastapi
 uvicorn

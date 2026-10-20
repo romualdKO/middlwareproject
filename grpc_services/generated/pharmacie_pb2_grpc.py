@@ -39,6 +39,16 @@ class PharmacieServiceStub:
                 request_serializer=pharmacie__pb2.VerifierStockRequest.SerializeToString,
                 response_deserializer=pharmacie__pb2.VerifierStockResponse.FromString,
                 _registered_method=True)
+        self.ListerMedicaments = channel.unary_unary(
+                '/clinique.pharmacie.PharmacieService/ListerMedicaments',
+                request_serializer=pharmacie__pb2.ListerMedicamentsRequest.SerializeToString,
+                response_deserializer=pharmacie__pb2.ListerMedicamentsResponse.FromString,
+                _registered_method=True)
+        self.MettreAJourStock = channel.unary_unary(
+                '/clinique.pharmacie.PharmacieService/MettreAJourStock',
+                request_serializer=pharmacie__pb2.MettreAJourStockRequest.SerializeToString,
+                response_deserializer=pharmacie__pb2.VerifierStockResponse.FromString,
+                _registered_method=True)
 
 
 class PharmacieServiceServicer:
@@ -50,12 +60,34 @@ class PharmacieServiceServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListerMedicaments(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MettreAJourStock(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_PharmacieServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'VerifierStock': grpc.unary_unary_rpc_method_handler(
                     servicer.VerifierStock,
                     request_deserializer=pharmacie__pb2.VerifierStockRequest.FromString,
+                    response_serializer=pharmacie__pb2.VerifierStockResponse.SerializeToString,
+            ),
+            'ListerMedicaments': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListerMedicaments,
+                    request_deserializer=pharmacie__pb2.ListerMedicamentsRequest.FromString,
+                    response_serializer=pharmacie__pb2.ListerMedicamentsResponse.SerializeToString,
+            ),
+            'MettreAJourStock': grpc.unary_unary_rpc_method_handler(
+                    servicer.MettreAJourStock,
+                    request_deserializer=pharmacie__pb2.MettreAJourStockRequest.FromString,
                     response_serializer=pharmacie__pb2.VerifierStockResponse.SerializeToString,
             ),
     }
@@ -85,6 +117,60 @@ class PharmacieService:
             target,
             '/clinique.pharmacie.PharmacieService/VerifierStock',
             pharmacie__pb2.VerifierStockRequest.SerializeToString,
+            pharmacie__pb2.VerifierStockResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListerMedicaments(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/clinique.pharmacie.PharmacieService/ListerMedicaments',
+            pharmacie__pb2.ListerMedicamentsRequest.SerializeToString,
+            pharmacie__pb2.ListerMedicamentsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MettreAJourStock(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/clinique.pharmacie.PharmacieService/MettreAJourStock',
+            pharmacie__pb2.MettreAJourStockRequest.SerializeToString,
             pharmacie__pb2.VerifierStockResponse.FromString,
             options,
             channel_credentials,

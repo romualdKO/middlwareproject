@@ -4,6 +4,8 @@ package clinique.pharmacie;
 
 service PharmacieService {
   rpc VerifierStock (VerifierStockRequest) returns (VerifierStockResponse);
+  rpc ListerMedicaments (ListerMedicamentsRequest) returns (ListerMedicamentsResponse);
+  rpc MettreAJourStock (MettreAJourStockRequest) returns (VerifierStockResponse);
 }
 
 message VerifierStockRequest {
@@ -20,4 +22,24 @@ message VerifierStockResponse {
   string emplacement = 6;
   string statut = 7;
   int32 quantite_demandee = 8;
+}
+
+message ListerMedicamentsRequest {}
+
+message Medicament {
+  string medicament_id = 1;
+  string nom = 2;
+  int32 quantite = 3;
+  int32 seuil_critique = 4;
+  string emplacement = 5;
+  string statut = 6;
+}
+
+message ListerMedicamentsResponse {
+  repeated Medicament medicaments = 1;
+}
+
+message MettreAJourStockRequest {
+  string medicament_id = 1;
+  int32 nouvelle_quantite = 2;
 }

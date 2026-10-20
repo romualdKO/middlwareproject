@@ -1,0 +1,53 @@
+# Option TLS mutuel pour un hôte/VPS. Définir les chemins TLS_* dans .env.
+services:
+  pharmacie:
+    environment:
+      GRPC_TLS_CERT: /run/tls/server.crt
+      GRPC_TLS_KEY: /run/tls/server.key
+      GRPC_TLS_CLIENT_CA: /run/tls/clients-ca.crt
+      GRPC_TLS_CA: /run/tls/server-ca.crt
+      GRPC_TLS_CLIENT_CERT: /run/tls/probe-client.crt
+      GRPC_TLS_CLIENT_KEY: /run/tls/probe-client.key
+    volumes:
+      - ${TLS_SERVER_CERT_PATH:?set TLS_SERVER_CERT_PATH}:/run/tls/server.crt:ro
+      - ${TLS_SERVER_KEY_PATH:?set TLS_SERVER_KEY_PATH}:/run/tls/server.key:ro
+      - ${TLS_CLIENT_CA_PATH:?set TLS_CLIENT_CA_PATH}:/run/tls/clients-ca.crt:ro
+      - ${TLS_SERVER_CA_PATH:?set TLS_SERVER_CA_PATH}:/run/tls/server-ca.crt:ro
+      - ${TLS_PROBE_CERT_PATH:?set TLS_PROBE_CERT_PATH}:/run/tls/probe-client.crt:ro
+      - ${TLS_PROBE_KEY_PATH:?set TLS_PROBE_KEY_PATH}:/run/tls/probe-client.key:ro
+  radiologie:
+    environment:
+      GRPC_TLS_CERT: /run/tls/server.crt
+      GRPC_TLS_KEY: /run/tls/server.key
+      GRPC_TLS_CLIENT_CA: /run/tls/clients-ca.crt
+      GRPC_TLS_CA: /run/tls/server-ca.crt
+      GRPC_TLS_CLIENT_CERT: /run/tls/probe-client.crt
+      GRPC_TLS_CLIENT_KEY: /run/tls/probe-client.key
+    volumes:
+      - ${TLS_SERVER_CERT_PATH:?set TLS_SERVER_CERT_PATH}:/run/tls/server.crt:ro
+      - ${TLS_SERVER_KEY_PATH:?set TLS_SERVER_KEY_PATH}:/run/tls/server.key:ro
+      - ${TLS_CLIENT_CA_PATH:?set TLS_CLIENT_CA_PATH}:/run/tls/clients-ca.crt:ro
+      - ${TLS_SERVER_CA_PATH:?set TLS_SERVER_CA_PATH}:/run/tls/server-ca.crt:ro
+      - ${TLS_PROBE_CERT_PATH:?set TLS_PROBE_CERT_PATH}:/run/tls/probe-client.crt:ro
+      - ${TLS_PROBE_KEY_PATH:?set TLS_PROBE_KEY_PATH}:/run/tls/probe-client.key:ro
+  gateway:
+    environment:
+      API_KEY: ${API_KEY:?set API_KEY in .env before deployment}
+      GRPC_TLS_CA: /run/tls/server-ca.crt
+      GRPC_TLS_CLIENT_CERT: /run/tls/client.crt
+      GRPC_TLS_CLIENT_KEY: /run/tls/client.key
+    volumes:
+      - ${TLS_CLIENT_CA_PATH:?set TLS_CLIENT_CA_PATH}:/run/tls/clients-ca.crt:ro
+      - ${TLS_SERVER_CA_PATH:?set TLS_SERVER_CA_PATH}:/run/tls/server-ca.crt:ro
+      - ${TLS_GATEWAY_CERT_PATH:?set TLS_GATEWAY_CERT_PATH}:/run/tls/client.crt:ro
+      - ${TLS_GATEWAY_KEY_PATH:?set TLS_GATEWAY_KEY_PATH}:/run/tls/client.key:ro
+  ui:
+    environment:
+      GRPC_TLS_CA: /run/tls/server-ca.crt
+      GRPC_TLS_CLIENT_CERT: /run/tls/client.crt
+      GRPC_TLS_CLIENT_KEY: /run/tls/client.key
+    volumes:
+      - ${TLS_CLIENT_CA_PATH:?set TLS_CLIENT_CA_PATH}:/run/tls/clients-ca.crt:ro
+      - ${TLS_SERVER_CA_PATH:?set TLS_SERVER_CA_PATH}:/run/tls/server-ca.crt:ro
+      - ${TLS_UI_CERT_PATH:?set TLS_UI_CERT_PATH}:/run/tls/client.crt:ro
+      - ${TLS_UI_KEY_PATH:?set TLS_UI_KEY_PATH}:/run/tls/client.key:ro

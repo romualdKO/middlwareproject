@@ -4,24 +4,19 @@ import sys
 
 import grpc
 
-from grpc_services.generated import pharmacie_pb2, pharmacie_pb2_grpc
-from grpc_services.generated import radiologie_pb2, radiologie_pb2_grpc
+from grpc_services.clients import PharmacieClient, RadiologieClient
 
 
 def verifier_stock(medicament_id, quantite_demandee=None, host="localhost", port=50052, timeout=2.0):
     """Interroge la pharmacie et retourne la réponse protobuf."""
-    request = pharmacie_pb2.VerifierStockRequest(medicament_id=medicament_id)
-    if quantite_demandee is not None:
-        request.quantite_demandee = quantite_demandee
-    with grpc.insecure_channel(f"{host}:{port}") as channel:
-        return pharmacie_pb2_grpc.PharmacieServiceStub(channel).VerifierStock(request, timeout=timeout)
+    with PharmacieClient(f"{host}:{port}", timeout=timeout) as client:
+        return client.verifier_stock(medicament_id, quantite_demandee)
 
 
 def obtenir_examens(examen_id="", patient_id="", host="localhost", port=50053, timeout=2.0):
     """Interroge la radiologie par examen ou par patient."""
-    request = radiologie_pb2.ObtenirExamenRequest(examen_id=examen_id, patient_id=patient_id)
-    with grpc.insecure_channel(f"{host}:{port}") as channel:
-        return radiologie_pb2_grpc.RadiologieServiceStub(channel).ObtenirExamen(request, timeout=timeout)
+    with RadiologieClient(f"{host}:{port}", timeout=timeout) as client:
+        return client.obtenir_examens(examen_id, patient_id)
 
 
 def main(argv=None):

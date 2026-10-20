@@ -1,0 +1,84 @@
+services:
+  pharmacie:
+    build: .
+    command: ["python", "-m", "grpc_services.pharmacie_server"]
+    environment:
+      GRPC_BIND_HOST: 0.0.0.0
+      PHARMACIE_GRPC_TARGET: pharmacie:50052
+      PHARMACIE_PORT: 50052
+      PHARMACIE_LATENCE_MS: ${PHARMACIE_LATENCE_MS:-0}
+    ports:
+      - "${HOST_GRPC_BIND_IP:-127.0.0.1}:${PHARMACIE_HOST_PORT:-50052}:50052"
+    healthcheck:
+      test: ["CMD", "python", "-m", "grpc_services.healthcheck", "pharmacie"]
+      interval: 10s
+      timeout: 4s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  radiologie:
+    build: .
+    command: ["python", "-m", "grpc_services.radiologie_server"]
+    environment:
+      GRPC_BIND_HOST: 0.0.0.0
+      RADIOLOGIE_GRPC_TARGET: radiologie:50053
+      RADIOLOGIE_PORT: 50053
+      RADIOLOGIE_LATENCE_MS: ${RADIOLOGIE_LATENCE_MS:-0}
+    ports:
+      - "${HOST_GRPC_BIND_IP:-127.0.0.1}:${RADIOLOGIE_HOST_PORT:-50053}:50053"
+    healthcheck:
+      test: ["CMD", "python", "-m", "grpc_services.healthcheck", "radiologie"]
+      interval: 10s
+      timeout: 4s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  gateway:
+    build: .
+    command: ["uvicorn", "rest_services.gateway:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      PHARMACIE_GRPC_TARGET: pharmacie:50052
+      RADIOLOGIE_GRPC_TARGET: radiologie:50053
+      GRPC_TIMEOUT_SECONDS: ${GRPC_TIMEOUT_SECONDS:-2}
+      HEALTH_CHECK_TIMEOUT_SECONDS: ${HEALTH_CHECK_TIMEOUT_SECONDS:-2}
+      API_KEY: ${API_KEY:-}
+      STOCK_WRITE_API_KEY: ${STOCK_WRITE_API_KEY:-}
+      CORS_ALLOW_ORIGINS: ${CORS_ALLOW_ORIGINS:-}
+    ports:
+      - "${HOST_WEB_BIND_IP:-127.0.0.1}:${GATEWAY_HOST_PORT:-8000}:8000"
+    depends_on:
+      pharmacie:
+        condition: service_healthy
+      radiologie:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2)"]
+      interval: 10s
+      timeout: 4s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  ui:
+    build: .
+    command: ["streamlit", "run", "ui_app.py", "--server.address=0.0.0.0", "--server.port=8501", "--server.headless=true"]
+    environment:
+      PHARMACIE_GRPC_TARGET: pharmacie:50052
+      RADIOLOGIE_GRPC_TARGET: radiologie:50053
+      GRPC_TIMEOUT_SECONDS: ${GRPC_TIMEOUT_SECONDS:-2}
+    ports:
+      - "${HOST_WEB_BIND_IP:-127.0.0.1}:${UI_HOST_PORT:-8501}:8501"
+    depends_on:
+      pharmacie:
+        condition: service_healthy
+      radiologie:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=2)"]
+      interval: 15s
+      timeout: 4s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped

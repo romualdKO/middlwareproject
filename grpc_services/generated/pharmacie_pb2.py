@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fpharmacie.proto\x12\x12\x63linique.pharmacie\"c\n\x14VerifierStockRequest\x12\x15\n\rmedicament_id\x18\x01 \x01(\t\x12\x1e\n\x11quantite_demandee\x18\x02 \x01(\x05H\x00\x88\x01\x01\x42\x14\n\x12_quantite_demandee\"\xb2\x01\n\x15VerifierStockResponse\x12\x15\n\rmedicament_id\x18\x01 \x01(\t\x12\x0b\n\x03nom\x18\x02 \x01(\t\x12\x12\n\ndisponible\x18\x03 \x01(\x08\x12\x10\n\x08quantite\x18\x04 \x01(\x05\x12\x0f\n\x07message\x18\x05 \x01(\t\x12\x13\n\x0b\x65mplacement\x18\x06 \x01(\t\x12\x0e\n\x06statut\x18\x07 \x01(\t\x12\x19\n\x11quantite_demandee\x18\x08 \x01(\x05\x32x\n\x10PharmacieService\x12\x64\n\rVerifierStock\x12(.clinique.pharmacie.VerifierStockRequest\x1a).clinique.pharmacie.VerifierStockResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fpharmacie.proto\x12\x12\x63linique.pharmacie\"c\n\x14VerifierStockRequest\x12\x15\n\rmedicament_id\x18\x01 \x01(\t\x12\x1e\n\x11quantite_demandee\x18\x02 \x01(\x05H\x00\x88\x01\x01\x42\x14\n\x12_quantite_demandee\"\xb2\x01\n\x15VerifierStockResponse\x12\x15\n\rmedicament_id\x18\x01 \x01(\t\x12\x0b\n\x03nom\x18\x02 \x01(\t\x12\x12\n\ndisponible\x18\x03 \x01(\x08\x12\x10\n\x08quantite\x18\x04 \x01(\x05\x12\x0f\n\x07message\x18\x05 \x01(\t\x12\x13\n\x0b\x65mplacement\x18\x06 \x01(\t\x12\x0e\n\x06statut\x18\x07 \x01(\t\x12\x19\n\x11quantite_demandee\x18\x08 \x01(\x05\"\x1a\n\x18ListerMedicamentsRequest\"\x7f\n\nMedicament\x12\x15\n\rmedicament_id\x18\x01 \x01(\t\x12\x0b\n\x03nom\x18\x02 \x01(\t\x12\x10\n\x08quantite\x18\x03 \x01(\x05\x12\x16\n\x0eseuil_critique\x18\x04 \x01(\x05\x12\x13\n\x0b\x65mplacement\x18\x05 \x01(\t\x12\x0e\n\x06statut\x18\x06 \x01(\t\"P\n\x19ListerMedicamentsResponse\x12\x33\n\x0bmedicaments\x18\x01 \x03(\x0b\x32\x1e.clinique.pharmacie.Medicament\"K\n\x17MettreAJourStockRequest\x12\x15\n\rmedicament_id\x18\x01 \x01(\t\x12\x19\n\x11nouvelle_quantite\x18\x02 \x01(\x05\x32\xd6\x02\n\x10PharmacieService\x12\x64\n\rVerifierStock\x12(.clinique.pharmacie.VerifierStockRequest\x1a).clinique.pharmacie.VerifierStockResponse\x12p\n\x11ListerMedicaments\x12,.clinique.pharmacie.ListerMedicamentsRequest\x1a-.clinique.pharmacie.ListerMedicamentsResponse\x12j\n\x10MettreAJourStock\x12+.clinique.pharmacie.MettreAJourStockRequest\x1a).clinique.pharmacie.VerifierStockResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,6 +35,14 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_VERIFIERSTOCKREQUEST']._serialized_end=138
   _globals['_VERIFIERSTOCKRESPONSE']._serialized_start=141
   _globals['_VERIFIERSTOCKRESPONSE']._serialized_end=319
-  _globals['_PHARMACIESERVICE']._serialized_start=321
-  _globals['_PHARMACIESERVICE']._serialized_end=441
+  _globals['_LISTERMEDICAMENTSREQUEST']._serialized_start=321
+  _globals['_LISTERMEDICAMENTSREQUEST']._serialized_end=347
+  _globals['_MEDICAMENT']._serialized_start=349
+  _globals['_MEDICAMENT']._serialized_end=476
+  _globals['_LISTERMEDICAMENTSRESPONSE']._serialized_start=478
+  _globals['_LISTERMEDICAMENTSRESPONSE']._serialized_end=558
+  _globals['_METTREAJOURSTOCKREQUEST']._serialized_start=560
+  _globals['_METTREAJOURSTOCKREQUEST']._serialized_end=635
+  _globals['_PHARMACIESERVICE']._serialized_start=638
+  _globals['_PHARMACIESERVICE']._serialized_end=980
 # @@protoc_insertion_point(module_scope)

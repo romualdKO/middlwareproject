@@ -1,0 +1,5 @@
+grpcio
+grpcio-health-checking
+fastapi
+uvicorn
+streamlit

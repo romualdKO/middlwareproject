@@ -3,7 +3,6 @@ from concurrent import futures
 import os
 from pathlib import Path
 import sys
-import time
 
 import grpc
 
@@ -11,6 +10,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from data.mock_pharmacie_radio import EXAMENS
 from grpc_services.generated import radiologie_pb2, radiologie_pb2_grpc
+from grpc_services.health import register_health_service
+from grpc_services.request_utils import latence_simulee
+from grpc_services.security import server_credentials_from_env
 
 DEFAULT_PORT = 50053
 ETATS_VALIDES = {"en_attente", "en_cours", "termine"}
@@ -29,7 +31,7 @@ class RadiologieServicer(radiologie_pb2_grpc.RadiologieServiceServicer):
         if not examen_id and not patient_id:
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, "examen_id ou patient_id est obligatoire.")
         if self.latence_ms:
-            time.sleep(self.latence_ms / 1000)
+            latence_simulee(self.latence_ms, context)
 
         if examen_id:
             examen = self.examens.get(examen_id)
@@ -74,12 +76,17 @@ class RadiologieServicer(radiologie_pb2_grpc.RadiologieServiceServicer):
 
 def serve(port=None):
     port = int(port or os.getenv("RADIOLOGIE_PORT", DEFAULT_PORT))
+    host = os.getenv("GRPC_BIND_HOST", "[::]")
+    target = f"{host}:{port}" if host.startswith("[") else f"[{host}]:{port}" if ":" in host else f"{host}:{port}"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     radiologie_pb2_grpc.add_RadiologieServiceServicer_to_server(RadiologieServicer(), server)
-    if server.add_insecure_port(f"[::]:{port}") == 0:
+    register_health_service(server, "clinique.radiologie.RadiologieService")
+    credentials = server_credentials_from_env()
+    bound_port = server.add_secure_port(target, credentials) if credentials else server.add_insecure_port(target)
+    if bound_port == 0:
         raise RuntimeError(f"Impossible d'écouter sur le port {port}.")
     server.start()
-    print(f"Serveur radiologie démarré sur le port {port}")
+    print(f"Serveur radiologie démarré sur {target} (TLS={'activé' if credentials else 'désactivé'})")
     server.wait_for_termination()
 
 

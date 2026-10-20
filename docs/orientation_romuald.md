@@ -33,6 +33,5 @@ partie du projet de façon autonome et recentrer les évolutions futures.
 ## Maquette UI
 
 La maquette `ui_app.py` appelle les deux stubs, affiche les stocks et les
-comptes-rendus, et indique l'état de santé des services. Elle est actuellement
-en lecture seule : la simulation d'une modification de stock nécessite une
-opération RPC dédiée, à convenir avec l'équipe avant d'étendre le contrat.
+comptes-rendus, indique l'état de santé des services et peut ajuster le stock
+fictif en mémoire. Cette modification est réinitialisée au redémarrage.

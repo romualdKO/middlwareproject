@@ -39,10 +39,12 @@ python -m pip install -r requirements.txt
 
 - `proto/` : contrats de communication.
 - `grpc_services/` : serveurs et clients gRPC.
-- `rest_services/` : API et client REST.
+- `rest_services/` : passerelle API REST vers les serveurs gRPC.
 - `tests/` : tests fonctionnels et benchmarks.
+- `benchmarks/` : comparaison des temps de réponse et tailles gRPC/REST.
 - `docs/` : documentation et schémas.
 - `data/` : données fictives de démonstration.
+- `compose.yaml` : démarrage local des deux serveurs, passerelle REST et UI.
 
 ## 5. Exécution
 
@@ -52,6 +54,11 @@ dépendances, les modules Python peuvent être régénérés avec :
 ```powershell
 python -m grpc_services.generate_proto
 ```
+
+Les clients gRPC partagés sont dans `grpc_services/clients.py`. Les appels
+externes peuvent aussi utiliser la passerelle REST FastAPI documentée dans
+`docs/deployment.md` (`/docs` pour OpenAPI, clé `X-API-Key` configurable).
+Les deux serveurs publient aussi le protocole standard gRPC Health Checking.
 
 Lancer chaque serveur dans son propre terminal :
 
@@ -71,6 +78,7 @@ python tests/test_pharmacie_rpc.py
 python tests/test_radiologie_rpc.py
 python tests/test_delais_rpc.py
 python tests/test_medecin_integration.py
+python tests/test_api_gateway.py
 ```
 
 Un client médecin de démonstration est disponible pour valider l'appel aux deux
@@ -86,18 +94,44 @@ Ce client sert de référence d'intégration locale. Le client médecin de l'éq
 pourra reprendre les mêmes stubs et confirmer ses contrats avant l'intégration
 finale.
 
-Une maquette de suivi est disponible dans `ui_app.py`. Après installation des
-dépendances et démarrage des deux serveurs, lancer :
+Après démarrage des serveurs gRPC et de la passerelle REST, comparer les
+protocoles avec :
+
+```powershell
+python -m benchmarks.compare_protocols --iterations 100 --api-key VOTRE_CLE_API
+```
+
+Une maquette de suivi est disponible dans `ui_app.py`. Elle peut consulter et
+simuler l'ajustement des stocks fictifs (en mémoire seulement). Après
+installation des dépendances et démarrage des deux serveurs, lancer :
 
 ```powershell
 streamlit run ui_app.py
 ```
 
-L’interface montre la santé des deux services, permet de vérifier un médicament,
-de charger le tableau des stocks depuis la pharmacie et de consulter les examens
-par identifiant d’examen ou de patient. Elle est en lecture seule : le contrat
-Pharmacie n’expose pas encore d’opération de mise à jour de stock.
+Pour démarrer toute la pile en local avec Docker Compose :
 
-## 6. Équipe
+```powershell
+Copy-Item .env.example .env
+docker compose up --build
+```
+
+La passerelle REST est sur `http://localhost:8000/docs`; l'interface est sur
+`http://localhost:8501`. Pour lancer la passerelle hors Compose, utiliser
+`python -m uvicorn rest_services.gateway:app --host 0.0.0.0 --port 8000` après
+avoir lancé les serveurs gRPC.
+
+L'interface montre la santé des deux services, permet de vérifier un médicament,
+de charger l'inventaire et d'ajuster un stock de démonstration. Elle consulte les
+examens par identifiant d'examen ou de patient.
+
+## 6. Déploiement
+
+La configuration Docker Compose démarre les deux services gRPC, la passerelle
+REST et l'interface Streamlit. Voir [docs/deployment.md](docs/deployment.md) pour
+les ports, les clés API, TLS mutuel et les étapes de déploiement VPS. Les mocks
+ne conviennent pas à des données de patients réelles.
+
+## 7. Équipe
 
 Projet réalisé en groupe de sept membres dans le cadre du cours de Middleware.

@@ -10,6 +10,8 @@ __pycache__/
 # Variables et secrets
 .env
 .env.*
+!.env.example
+/certs/
 
 # Éditeur
 .vscode/
