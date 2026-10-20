@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: clinique-espoir-demo
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: romuald-pharmacie-radiologie
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerCommand: python -m scripts.render_entrypoint
+    healthCheckPath: /health/ready
+    autoDeploy: false
+    envVars:
+      - key: API_KEY
+        generateValue: true
+      - key: GRPC_BIND_HOST
+        value: 127.0.0.1
+      - key: PHARMACIE_PORT
+        value: 50052
+      - key: RADIOLOGIE_PORT
+        value: 50053
+      - key: PHARMACIE_GRPC_TARGET
+        value: 127.0.0.1:50052
+      - key: RADIOLOGIE_GRPC_TARGET
+        value: 127.0.0.1:50053
+      - key: GRPC_TIMEOUT_SECONDS
+        value: 2
+      - key: HEALTH_CHECK_TIMEOUT_SECONDS
+        value: 2

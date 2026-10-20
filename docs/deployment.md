@@ -5,7 +5,7 @@
 - `pharmacie` et `radiologie` : serveurs gRPC, ports internes 50052 et 50053.
 - Les deux serveurs exposent gRPC Health Checking avec état `SERVING`.
 - `gateway` : passerelle REST FastAPI, port interne 8000, documentation OpenAPI
-  à `/docs`.
+  à `/docs` et interface web HTML/Tailwind à `/`.
 - `ui` : tableau de bord Streamlit sur le port interne 8501.
 - Les contrôles de santé Compose attendent que les serveurs gRPC répondent avant
   de lancer la passerelle et l'interface.
@@ -13,6 +13,31 @@
 Les données restent des mocks en mémoire. La mise à jour de stock sert à la
 démonstration et disparaît au redémarrage du conteneur. Ce déploiement ne doit
 pas recevoir de données médicales réelles.
+
+## Démo publique Render
+
+Le fichier `render.yaml` prépare un seul web service Docker gratuit pour cette
+démonstration. `scripts/render_entrypoint.py` démarre les deux serveurs gRPC sur
+la boucle locale du conteneur, attend leur état de santé, puis lance FastAPI
+sur le port `PORT` attribué par Render. L'interface HTML est servie à `/` et les
+intégrations externes utilisent la passerelle REST. Les ports gRPC ne sont pas
+publiés directement sur Internet dans cette configuration.
+
+1. Pousser la branche `romuald-pharmacie-radiologie` sur le dépôt GitHub.
+2. Créer un compte Render, choisir **New → Blueprint**, puis connecter le dépôt
+   `romualdKO/middlwareproject` et sélectionner cette branche.
+3. Examiner le Blueprint et confirmer la création de `clinique-espoir-demo`.
+   Render génère `API_KEY`; la valeur reste dans l'environnement Render.
+4. Après le premier déploiement, ouvrir l'URL `onrender.com` affichée par Render.
+   Saisir la valeur `API_KEY` depuis la page **Environment** du service dans le
+   champ Clé API de l'interface, puis cliquer **Appliquer**.
+5. Contrôler `/health/ready`, les journaux du service et `/docs`.
+
+Le plan gratuit met le service en veille après 15 minutes sans trafic et le
+redémarrage suivant peut prendre environ une minute. Les données fictives et
+les modifications de stock sont en mémoire et sont réinitialisées lors d'un
+redémarrage ou d'une mise en veille. Ce profil convient à une présentation, pas
+à un service médical de production. [Détails des limites gratuites Render](https://render.com/docs/free).
 
 ## Démarrage local ou démonstration sur VPS
 
@@ -42,9 +67,10 @@ pas recevoir de données médicales réelles.
    docker compose logs -f gateway ui pharmacie radiologie
    ```
 
-Accès local sur le VPS : `http://127.0.0.1:8000/docs` et
-`http://127.0.0.1:8501`. Un reverse proxy TLS (Caddy, Nginx ou équivalent) peut
-publier ces deux interfaces sous des noms DNS HTTPS. `/health/live` vérifie le
+Accès local sur le VPS : interface web `http://127.0.0.1:8000/`, documentation
+`http://127.0.0.1:8000/docs` et tableau Streamlit `http://127.0.0.1:8501`.
+Un reverse proxy TLS (Caddy, Nginx ou équivalent) peut publier l'interface web
+sous un nom DNS HTTPS. `/health/live` vérifie le
 processus API et `/health/ready` vérifie aussi les deux services gRPC. Protéger
 l'interface Streamlit par une authentification au reverse proxy ou un VPN avant
 toute exposition hors réseau privé.

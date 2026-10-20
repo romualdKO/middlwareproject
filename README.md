@@ -101,7 +101,9 @@ protocoles avec :
 python -m benchmarks.compare_protocols --iterations 100 --api-key VOTRE_CLE_API
 ```
 
-Une maquette de suivi est disponible dans `ui_app.py`. Elle peut consulter et
+L'interface web principale est dans `web_ui/index.html` et utilise Tailwind CSS.
+Elle communique avec la passerelle REST sur la même origine. La maquette
+Streamlit de suivi reste disponible dans `ui_app.py` et peut consulter et
 simuler l'ajustement des stocks fictifs (en mémoire seulement). Après
 installation des dépendances et démarrage des deux serveurs, lancer :
 
@@ -116,7 +118,9 @@ Copy-Item .env.example .env
 docker compose up --build
 ```
 
-La passerelle REST est sur `http://localhost:8000/docs`; l'interface est sur
+L'interface web HTML/Tailwind et sa passerelle API sont sur
+`http://localhost:8000/`; la documentation REST est sur
+`http://localhost:8000/docs`. Le tableau de bord Streamlit reste disponible sur
 `http://localhost:8501`. Pour lancer la passerelle hors Compose, utiliser
 `python -m uvicorn rest_services.gateway:app --host 0.0.0.0 --port 8000` après
 avoir lancé les serveurs gRPC.
@@ -128,8 +132,10 @@ examens par identifiant d'examen ou de patient.
 ## 6. Déploiement
 
 La configuration Docker Compose démarre les deux services gRPC, la passerelle
-REST et l'interface Streamlit. Voir [docs/deployment.md](docs/deployment.md) pour
-les ports, les clés API, TLS mutuel et les étapes de déploiement VPS. Les mocks
+REST avec l'interface web HTML/Tailwind, ainsi que l'interface Streamlit. Le
+fichier `render.yaml` prépare une démo publique Render avec les deux services
+gRPC confinés dans le même conteneur que la passerelle. Voir
+[docs/deployment.md](docs/deployment.md) pour les étapes Render ou VPS. Les mocks
 ne conviennent pas à des données de patients réelles.
 
 ## 7. Équipe

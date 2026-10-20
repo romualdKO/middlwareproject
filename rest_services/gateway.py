@@ -2,11 +2,12 @@
 from contextlib import asynccontextmanager
 import hmac
 import os
+from pathlib import Path
 
 import grpc
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel, Field
 
@@ -61,6 +62,10 @@ def create_app():
             allow_methods=["GET", "PUT", "OPTIONS"],
             allow_headers=["Content-Type", "X-API-Key"],
         )
+
+    @app.get("/", include_in_schema=False)
+    def interface_web():
+        return FileResponse(Path(__file__).resolve().parent.parent / "web_ui" / "index.html")
 
     @app.middleware("http")
     async def require_api_key(request: Request, call_next):
