@@ -8,7 +8,7 @@ import grpc
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from grpc_services.generated import pharmacie_pb2_grpc, radiologie_pb2_grpc
 from grpc_services.clients import PharmacieClient, RadiologieClient
-from grpc_services.medecin_client import obtenir_examens, verifier_stock
+from grpc_services.medecin_client import consulter_services, obtenir_examens, verifier_stock
 from grpc_services.pharmacie_server import PharmacieServicer
 from grpc_services.radiologie_server import RadiologieServicer
 from grpc_services.health import register_health_service
@@ -41,6 +41,20 @@ def main():
         examens = obtenir_examens(patient_id="PAT-INT", host="127.0.0.1", port=port_radiologie)
         assert stock.disponible and stock.quantite == 9
         assert len(examens.examens) == 1 and examens.examens[0].examen_id == "RAD-INT"
+        stock, examens = consulter_services(
+            "MED-INT", 5, examen_id="RAD-INT",
+            pharmacie_target=f"127.0.0.1:{port_pharmacie}",
+            radiologie_target=f"127.0.0.1:{port_radiologie}",
+        )
+        assert stock.disponible and examens.examens[0].examen_id == "RAD-INT"
+        stock, examens = consulter_services(
+            "MED-INT", 5, examen_id="RAD-INT", timeout=0.3,
+            pharmacie_target="127.0.0.1:1",
+            radiologie_target=f"127.0.0.1:{port_radiologie}",
+        )
+        assert isinstance(stock, grpc.RpcError)
+        assert stock.code() in {grpc.StatusCode.UNAVAILABLE, grpc.StatusCode.DEADLINE_EXCEEDED}
+        assert examens.examens[0].examen_id == "RAD-INT"
         with PharmacieClient(f"127.0.0.1:{port_pharmacie}") as client:
             assert client.is_healthy()
         with RadiologieClient(f"127.0.0.1:{port_radiologie}") as client:

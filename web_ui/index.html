@@ -109,7 +109,7 @@
         const response = await fetch(new URL(path, `${state.base.replace(/\/$/, '')}/`), { ...options, headers, signal: controller.signal });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) {
-          if (response.status === 401) throw new Error('Clé API manquante ou incorrecte. Vérifiez la clé puis cliquez sur Connecter.');
+          if (response.status === 401) throw new Error('Clé API Web manquante ou incorrecte. Sur Render, vérifiez API_KEY dans Environment, saisissez cette valeur dans le champ Clé API puis cliquez sur Connecter. Cette clé ne configure pas les appels gRPC.');
           throw new Error(data.detail?.message || data.detail || `La requête a échoué (HTTP ${response.status}).`);
         }
         return data;

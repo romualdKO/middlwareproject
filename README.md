@@ -88,6 +88,7 @@ services une fois ceux-ci démarrés :
 python -m grpc_services.medecin_client pharmacie MED001 --quantite 2
 python -m grpc_services.medecin_client radiologie --patient PAT001
 python -m grpc_services.medecin_client radiologie --examen RAD001
+python -m grpc_services.medecin_client consultation MED001 RAD001 --quantite 2
 ```
 
 Ce client sert de référence d'intégration locale. Le client médecin de l'équipe
@@ -100,6 +101,13 @@ protocoles avec :
 ```powershell
 python -m benchmarks.compare_protocols --iterations 100 --api-key VOTRE_CLE_API
 ```
+
+Un exemple de mesures locales est disponible dans
+[`docs/benchmark_results.md`](docs/benchmark_results.md). Les résultats varient
+selon la machine et le réseau.
+
+Pour raccorder le client médecin aux RPC pharmacie et radiologie, voir la
+[`fiche d'intégration gRPC`](docs/fiche_integration_grpc.md).
 
 L'interface web principale est dans `web_ui/index.html` et utilise Tailwind CSS.
 Elle communique avec la passerelle REST sur la même origine. La maquette
