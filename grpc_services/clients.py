@@ -95,6 +95,14 @@ class RadiologieClient:
         request = radiologie_pb2.ObtenirExamenRequest(examen_id=examen_id, patient_id=patient_id)
         return self.stub.ObtenirExamen(request, timeout=self.timeout)
 
+    def mettre_a_jour_etat_examen(self, examen_id, etat, resultat=""):
+        request = radiologie_pb2.MettreAJourEtatExamenRequest(
+            examen_id=examen_id,
+            etat=etat,
+            resultat=resultat,
+        )
+        return self.stub.MettreAJourEtatExamen(request, timeout=self.timeout)
+
     def is_healthy(self, timeout=None):
         return _check_channel_health(self.channel, timeout or self.timeout)
 

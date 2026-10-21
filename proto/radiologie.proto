@@ -4,6 +4,19 @@ package clinique.radiologie;
 
 service RadiologieService {
   rpc ObtenirExamen (ObtenirExamenRequest) returns (ObtenirExamenResponse);
+  rpc MettreAJourEtatExamen (MettreAJourEtatExamenRequest) returns (MettreAJourEtatExamenResponse);
+}
+
+message MettreAJourEtatExamenRequest {
+  string examen_id = 1;
+  string etat = 2;
+  string resultat = 3;
+}
+
+message MettreAJourEtatExamenResponse {
+  Examen examen = 1;
+  bool notification_envoyee = 2;
+  string message = 3;
 }
 
 message ObtenirExamenRequest {

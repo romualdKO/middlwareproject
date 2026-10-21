@@ -10,7 +10,7 @@ import grpc
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from data.mock_pharmacie_radio import MEDICAMENTS
-from grpc_services.generated import pharmacie_pb2, pharmacie_pb2_grpc
+from grpc_services.generated import clinique_pb2, clinique_pb2_grpc, pharmacie_pb2, pharmacie_pb2_grpc
 from grpc_services.health import register_health_service
 from grpc_services.request_utils import latence_simulee
 from grpc_services.security import server_credentials_from_env
@@ -18,7 +18,10 @@ from grpc_services.security import server_credentials_from_env
 DEFAULT_PORT = 50052
 
 
-class PharmacieServicer(pharmacie_pb2_grpc.PharmacieServiceServicer):
+class PharmacieServicer(
+    pharmacie_pb2_grpc.PharmacieServiceServicer,
+    clinique_pb2_grpc.PharmacieServicer,
+):
     def __init__(self, medicaments=None, latence_ms=None):
         self.medicaments = medicaments if medicaments is not None else MEDICAMENTS
         self.latence_ms = int(os.getenv("PHARMACIE_LATENCE_MS", "0")) if latence_ms is None else latence_ms
@@ -61,6 +64,23 @@ class PharmacieServicer(pharmacie_pb2_grpc.PharmacieServiceServicer):
                 statut=statut,
             ))
         return pharmacie_pb2.ListerMedicamentsResponse(medicaments=resultat)
+
+    def GetMedicamentsPharmacie(self, request, context):
+        """Expose l'inventaire au format attendu par le service Consultation."""
+        del request
+        with self.lock:
+            medicaments = [(identifiant, dict(donnees)) for identifiant, donnees in self.medicaments.items()]
+        resultat = []
+        for identifiant, donnees in sorted(medicaments):
+            quantite = donnees.get("quantite", 0)
+            if not isinstance(quantite, int) or quantite < 0:
+                context.abort(grpc.StatusCode.INTERNAL, f"Stock invalide pour {identifiant}.")
+            resultat.append(clinique_pb2.Medicament(
+                id=identifiant,
+                nom=donnees.get("nom", ""),
+                stock=quantite,
+            ))
+        return clinique_pb2.ListMedResponse(medicaments=resultat)
 
     def MettreAJourStock(self, request, context):
         medicament_id = request.medicament_id.strip()
@@ -119,7 +139,9 @@ def serve(port=None):
     host = os.getenv("GRPC_BIND_HOST", "[::]")
     target = f"{host}:{port}" if host.startswith("[") else f"[{host}]:{port}" if ":" in host else f"{host}:{port}"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    pharmacie_pb2_grpc.add_PharmacieServiceServicer_to_server(PharmacieServicer(), server)
+    servicer = PharmacieServicer()
+    pharmacie_pb2_grpc.add_PharmacieServiceServicer_to_server(servicer, server)
+    clinique_pb2_grpc.add_PharmacieServicer_to_server(servicer, server)
     register_health_service(server, "clinique.pharmacie.PharmacieService")
     credentials = server_credentials_from_env()
     bound_port = server.add_secure_port(target, credentials) if credentials else server.add_insecure_port(target)

@@ -16,10 +16,11 @@ def main():
         f"--grpc_python_out={OUTPUT}",
         str(ROOT / "proto" / "pharmacie.proto"),
         str(ROOT / "proto" / "radiologie.proto"),
+        str(ROOT / "proto" / "clinique.proto"),
     ])
     if resultat != 0:
         raise SystemExit(resultat)
-    for nom in ("pharmacie", "radiologie"):
+    for nom in ("pharmacie", "radiologie", "clinique"):
         chemin = OUTPUT / f"{nom}_pb2_grpc.py"
         contenu = chemin.read_text(encoding="utf-8")
         contenu = contenu.replace(f"import {nom}_pb2 as ", f"from . import {nom}_pb2 as ")

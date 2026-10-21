@@ -1,0 +1,62 @@
+syntax = "proto3";
+package clinique;
+// Pour gRPC-Gateway (Go), ajouter : import "google/api/annotations.proto";
+// puis décommenter les blocs option (google.api.http) ci-dessous.
+
+message Empty {}
+message Ack { bool ok = 1; string message = 2; }
+message Patient { string id_dossier = 1; string nom = 2; string prenom = 3; }
+message Rdv { string id_rdv = 1; string id_dossier = 2; string date_rdv = 3; Patient patient = 4; }
+message Notif { string id_notif = 1; string type = 2; string id_dossier = 3; string id_resultat = 4; }
+message Medicament { string id = 1; string nom = 2; int32 stock = 3; }
+
+message PrendreRDVRequest { string id_dossier = 1; string date_rdv = 2; }
+message PrendreRDVResponse { string id_rdv = 1; }
+message NotifierResultatRequest { string id_dossier = 1; string id_resultat = 2; string type = 3; } // 'L' | 'R'
+message NotifierResultatResponse { string id_notif = 1; }
+message ListRdvResponse { repeated Rdv rdvs = 1; }
+message ListNotifResponse { repeated Notif notifs = 1; }
+message ListMedResponse { repeated Medicament medicaments = 1; }
+message ObservationsRequest { string id_dossier = 1; repeated string observations = 2; }
+message PrescriptionRequest { string id_dossier = 1; repeated string lignes = 2; }
+message ImageRequest { string id_resultat = 1; }
+message ImageResponse { bytes data = 1; string mime = 2; }
+message PatientsRequest { repeated string id_dossiers = 1; }
+message PatientsResponse { repeated Patient patients = 1; }
+
+service Consultation {
+  rpc PrendreRDV(PrendreRDVRequest) returns (PrendreRDVResponse) {
+    // option (google.api.http) = { post: "/api/rdvs" body: "*" };
+  }
+  rpc NotifierResultat(NotifierResultatRequest) returns (NotifierResultatResponse) {
+    // option (google.api.http) = { post: "/api/notifs" body: "*" };
+  }
+  rpc ListerRDVs(Empty) returns (ListRdvResponse) {
+    // option (google.api.http) = { get: "/api/rdvs" };
+  }
+  rpc ListerNotifications(Empty) returns (ListNotifResponse) {
+    // option (google.api.http) = { get: "/api/notifs" };
+  }
+  rpc GetMedicaments(Empty) returns (ListMedResponse) {
+    // option (google.api.http) = { get: "/api/medicaments" };
+  }
+  rpc RenseignerObservations(ObservationsRequest) returns (Ack) {
+    // option (google.api.http) = { post: "/api/observations" body: "*" };
+  }
+  rpc RenseignerPrescription(PrescriptionRequest) returns (Ack) {
+    // option (google.api.http) = { post: "/api/prescriptions" body: "*" };
+  }
+  rpc GetResultatImage(ImageRequest) returns (ImageResponse) {
+    // option (google.api.http) = { get: "/api/resultats/{id_resultat}/image" };
+  }
+}
+
+// Services distants appelés par Consultation
+service Accueil {
+  rpc GetPatientsByIDs(PatientsRequest) returns (PatientsResponse);
+  rpc RenseignerObservations(ObservationsRequest) returns (Ack);
+  rpc RenseignerPrescription(PrescriptionRequest) returns (Ack);
+}
+service Pharmacie {
+  rpc GetMedicamentsPharmacie(Empty) returns (ListMedResponse);
+}

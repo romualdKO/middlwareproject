@@ -30,6 +30,11 @@ class MiseAJourStock(BaseModel):
     nouvelle_quantite: int = Field(ge=0)
 
 
+class MiseAJourEtatExamen(BaseModel):
+    etat: str = Field(pattern="^(en_attente|en_cours|termine)$")
+    resultat: str = ""
+
+
 def erreur_http(erreur):
     statut = STATUS_HTTP.get(erreur.code(), 502)
     raise HTTPException(status_code=statut, detail={"code": erreur.code().name, "message": erreur.details()})
@@ -156,6 +161,30 @@ def create_app():
     )
     def obtenir_examens_patient(patient_id: str, request: Request):
         return _examens_json(request, patient_id=patient_id)
+
+    @app.put(
+        "/api/v1/radiologie/examens/{examen_id}/etat", tags=["radiologie"],
+        dependencies=[Depends(api_key_scheme)], responses={401: {"description": "Clé API manquante ou invalide."}},
+    )
+    def mettre_a_jour_etat_examen(examen_id: str, body: MiseAJourEtatExamen, request: Request):
+        try:
+            response = request.app.state.radiologie.mettre_a_jour_etat_examen(
+                examen_id, body.etat, body.resultat
+            )
+            return {
+                "examen": {
+                    "examen_id": response.examen.examen_id,
+                    "patient_id": response.examen.patient_id,
+                    "type_examen": response.examen.type_examen,
+                    "etat": response.examen.etat,
+                    "resultat": response.examen.resultat,
+                    "date": response.examen.date,
+                },
+                "notification_envoyee": response.notification_envoyee,
+                "message": response.message,
+            }
+        except grpc.RpcError as erreur:
+            erreur_http(erreur)
 
     return app
 

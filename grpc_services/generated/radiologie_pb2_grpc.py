@@ -39,12 +39,23 @@ class RadiologieServiceStub:
                 request_serializer=radiologie__pb2.ObtenirExamenRequest.SerializeToString,
                 response_deserializer=radiologie__pb2.ObtenirExamenResponse.FromString,
                 _registered_method=True)
+        self.MettreAJourEtatExamen = channel.unary_unary(
+                '/clinique.radiologie.RadiologieService/MettreAJourEtatExamen',
+                request_serializer=radiologie__pb2.MettreAJourEtatExamenRequest.SerializeToString,
+                response_deserializer=radiologie__pb2.MettreAJourEtatExamenResponse.FromString,
+                _registered_method=True)
 
 
 class RadiologieServiceServicer:
     """Missing associated documentation comment in .proto file."""
 
     def ObtenirExamen(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def MettreAJourEtatExamen(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -57,6 +68,11 @@ def add_RadiologieServiceServicer_to_server(servicer, server):
                     servicer.ObtenirExamen,
                     request_deserializer=radiologie__pb2.ObtenirExamenRequest.FromString,
                     response_serializer=radiologie__pb2.ObtenirExamenResponse.SerializeToString,
+            ),
+            'MettreAJourEtatExamen': grpc.unary_unary_rpc_method_handler(
+                    servicer.MettreAJourEtatExamen,
+                    request_deserializer=radiologie__pb2.MettreAJourEtatExamenRequest.FromString,
+                    response_serializer=radiologie__pb2.MettreAJourEtatExamenResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -86,6 +102,33 @@ class RadiologieService:
             '/clinique.radiologie.RadiologieService/ObtenirExamen',
             radiologie__pb2.ObtenirExamenRequest.SerializeToString,
             radiologie__pb2.ObtenirExamenResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MettreAJourEtatExamen(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/clinique.radiologie.RadiologieService/MettreAJourEtatExamen',
+            radiologie__pb2.MettreAJourEtatExamenRequest.SerializeToString,
+            radiologie__pb2.MettreAJourEtatExamenResponse.FromString,
             options,
             channel_credentials,
             insecure,

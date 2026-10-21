@@ -23,6 +23,10 @@ services:
         value: 127.0.0.1:50052
       - key: RADIOLOGIE_GRPC_TARGET
         value: 127.0.0.1:50053
+      - key: CONSULTATION_REST_URL
+        value: ""
+      - key: CONSULTATION_NOTIFICATION_TIMEOUT_SECONDS
+        value: 5
       - key: GRPC_TIMEOUT_SECONDS
         value: 2
       - key: HEALTH_CHECK_TIMEOUT_SECONDS

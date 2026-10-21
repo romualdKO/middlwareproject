@@ -198,3 +198,80 @@ Pour la démo Render, le collègue peut seulement ouvrir le site ou appeler les
 routes REST avec l'en-tête `X-API-Key`. Pour une intégration gRPC directe, il
 faut déployer nos serveurs sur un hôte/réseau qui publie les ports gRPC avec
 TLS/mTLS, puis remplacer les cibles par son DNS/IP.
+
+## Interop??rabilit?? avec Consultation et Accueil (Tailscale)
+
+Le contrat fourni par l'??quipe Consultation est `proto/clinique.proto` (package
+`clinique`). Les services Pharmacie et Radiologie de ce projet conservent leurs
+contrats et leurs RPC existants, et exposent en plus le contrat partag?? n??cessaire
+?? l'interop??rabilit?? :
+
+- Radiologie appelle `clinique.Consultation/NotifierResultat` apr??s la mise ?? jour
+  d'un examen, avec `id_dossier=<patient_id>`, `id_resultat=<examen_id>` et
+  `type="R"`. Consultation renvoie `id_notif`.
+- Pharmacie expose `clinique.Pharmacie/GetMedicamentsPharmacie`, avec les champs
+  `id`, `nom` et `stock`, pour que Consultation puisse lire l'inventaire.
+- Les RPC `clinique.Accueil` de ce contrat sont des appels sortants de
+  Consultation vers Accueil ; notre service n'a pas ?? les impl??menter.
+
+Configurer Radiologie avec la cible Tailscale du serveur Consultation :
+
+```text
+CONSULTATION_GRPC_TARGET=<IP_TAILSCALE_CONSULTATION>:50051
+CONSULTATION_NOTIFICATION_TIMEOUT_SECONDS=2
+```
+
+Configurer le serveur Consultation avec la cible Tailscale de notre Pharmacie :
+
+```text
+PHARMACIE_ADDR=<IP_TAILSCALE_DE_CETTE_MACHINE>:50052
+MOCK=0
+```
+
+Attention : la documentation Consultation donne `localhost:50053` comme valeur
+par d??faut de `PHARMACIE_ADDR`, mais dans ce projet Pharmacie ??coute sur `50052`
+et Radiologie sur `50053`. Il faut donc remplacer cette valeur par l'IP Tailscale
+et le port r??el de Pharmacie ; le `50053` local correspond ici ?? Radiologie.
+
+Pour les essais sur les ordinateurs de la pr??sentation, lancer les serveurs avec
+`GRPC_BIND_HOST=0.0.0.0` (ou une interface joignable par Tailscale), autoriser
+les ports n??cessaires dans le pare-feu, puis ??changer les IP Tailscale et les
+ports. Le trafic du tailnet est chiffr?? par Tailscale ; le contrat Consultation
+indique gRPC sans TLS par d??faut. Ne pas utiliser les URL Render comme cibles
+pour ces RPC. En Docker Compose, le mapping actuel est limit?? ?? `127.0.0.1` par
+d??faut ; pour une d??monstration entre machines, adapter `HOST_GRPC_BIND_IP` ou
+lancer les serveurs Python directement.
+
+`proto/clinique.proto` est le contrat gRPC ?? partager avec les ??quipes
+Consultation/Accueil. L'API REST `POST /api/notifs` document??e par Consultation
+est l'??quivalent HTTP de `NotifierResultat`, mais pour la d??monstration RPC on
+appelle directement la m??thode gRPC.
+
+## Notification Radiologie vers Consultation depuis Render
+
+Pour la d?monstration o? les deux ?quipes utilisent leurs URL Render publiques,
+configurer dans l'environnement Render de `clinique-espoir-demo` :
+
+```text
+CONSULTATION_REST_URL=https://<url-publique-consultation>
+CONSULTATION_NOTIFICATION_TIMEOUT_SECONDS=5
+```
+
+Entrer seulement l'origine HTTPS (sans `/api/notifs`) ; Radiologie ajoute cette
+route et envoie `id_dossier` (patient_id), `id_resultat` (examen_id) et `type="R"`.
+Cette configuration REST est prioritaire sur `CONSULTATION_GRPC_TARGET` pour
+cette d?monstration. Ne pas mettre l'adresse Tailscale `100.64.4.67` ici, car
+elle n'est pas accessible au service Render.
+
+Pour d?clencher l'op?ration depuis l'API Render, utiliser l'URL publique de
+notre passerelle, la cl? `API_KEY` et un identifiant d'examen existant :
+
+```sh
+curl -X PUT "https://clinique-espoir-demo.onrender.com/api/v1/radiologie/examens/RAD002/etat" \
+  -H "X-API-Key: $API_KEY" -H "Content-Type: application/json" \
+  -d '{"etat":"termine","resultat":"Compte rendu de d?monstration"}'
+```
+
+La r?ponse contient `notification_envoyee` et le message de Consultation. Si
+elle vaut `false`, consulter le message retourn? ainsi que les journaux Render
+des deux services. Ne jamais publier la valeur de `API_KEY`.
