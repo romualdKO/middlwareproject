@@ -9,7 +9,7 @@ services:
     dockerContext: .
     dockerCommand: python -m scripts.render_entrypoint
     healthCheckPath: /health/ready
-    autoDeploy: false
+    autoDeployTrigger: commit
     envVars:
       - key: API_KEY
         generateValue: true
